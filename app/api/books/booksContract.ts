@@ -1,21 +1,16 @@
 import { z } from "zod";
 import { initContract } from "@ts-rest/core";
+import { BookSchema, ErrorResponseSchema } from "../models/schemas";
 
 const contract = initContract();
 
-export const ApiContractV1 = contract.router({
+export const BooksContract = contract.router({
   getAllBooks: {
     method: "GET",
     path: "/api/books",
     responses: {
-      200: z.array(
-        z.object({
-          id: z.string(),
-          title: z.string(),
-          author: z.string(),
-          publishedYear: z.number(),
-        })
-      ),
+      200: z.array(BookSchema),
+      400: ErrorResponseSchema,
     },
   },
   getBook: {
@@ -25,12 +20,9 @@ export const ApiContractV1 = contract.router({
       id: z.string(),
     }),
     responses: {
-      200: z.object({
-        id: z.string(),
-        title: z.string(),
-        author: z.string(),
-        publishedYear: z.number(),
-      }),
+      200: BookSchema,
+      400: ErrorResponseSchema,
+      404: ErrorResponseSchema,
     },
   },
   addBook: {
@@ -42,12 +34,8 @@ export const ApiContractV1 = contract.router({
       publishedYear: z.number(),
     }),
     responses: {
-      201: z.object({
-        id: z.string(),
-        title: z.string(),
-        author: z.string(),
-        publishedYear: z.number(),
-      }),
+      201: BookSchema,
+      400: ErrorResponseSchema,
     },
   },
   deleteBook: {
@@ -56,9 +44,11 @@ export const ApiContractV1 = contract.router({
     pathParams: z.object({
       id: z.string(),
     }),
-    body: z.object({}).optional(),
+    body: null,
     responses: {
       204: z.null(),
+      400: ErrorResponseSchema,
+      404: ErrorResponseSchema,
     },
   },
 });
