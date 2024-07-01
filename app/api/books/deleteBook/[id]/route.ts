@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/app/api/config/db";
 import { Book } from "../../../models/book";
 import { eq } from "drizzle-orm";
-import { authenticate } from "@/app/api/utils/auth";
-import { logApiRequest } from "@/app/utils/logger";
+import { authenticate } from "../../../utils/auth";
+import { db } from "../../../config/db";
+import { logApiRequest } from "../../../../utils/logger";
 
 export async function DELETE(req: NextRequest) {
   const authResponse = authenticate(req);

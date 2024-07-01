@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/app/api/config/db";
 import { Book, BookInsertModel } from "../../models/book";
 import { authenticate } from "../../utils/auth";
-import { logApiRequest } from "@/app/utils/logger";
+import { db } from "../../config/db";
+import { logApiRequest } from "../../../utils/logger";
 
 export async function POST(req: NextRequest) {
   const authResponse = authenticate(req);
