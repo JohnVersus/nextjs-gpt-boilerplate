@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "../../../config/drizzle";
+import { db } from "@/app/api/config/db";
 import { Book } from "../../../models/book";
 import { eq } from "drizzle-orm";
 import { authenticate } from "@/app/api/utils/auth";
@@ -17,6 +17,13 @@ export async function DELETE(req: NextRequest) {
     );
   }
 
-  await db.delete(Book).where(eq(Book.id, id)).execute();
-  return NextResponse.json(null, { status: 204 });
+  const [result] = await db.delete(Book).where(eq(Book.id, id)).execute();
+
+  if (result.affectedRows === 0) {
+    return NextResponse.json(
+      { message: "Book not found", statusCode: 404 },
+      { status: 404 }
+    );
+  }
+  return new NextResponse(null, { status: 204 });
 }

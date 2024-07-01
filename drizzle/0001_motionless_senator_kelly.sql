@@ -1,0 +1,1 @@
+ALTER TABLE `books` MODIFY COLUMN `updated_at` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP;

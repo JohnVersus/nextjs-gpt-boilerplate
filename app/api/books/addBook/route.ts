@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "../../config/drizzle";
+import { db } from "@/app/api/config/db";
 import { Book, BookInsertModel } from "../../models/book";
 import { authenticate } from "../../utils/auth";
 
@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
 
   const { title, author, publishedYear }: BookInsertModel = await req.json();
 
-  const insertedBook = await db
+  const [insertResult] = await db
     .insert(Book)
     .values({
       title,
@@ -18,5 +18,10 @@ export async function POST(req: NextRequest) {
     })
     .execute();
 
-  return NextResponse.json(insertedBook, { status: 201 });
+  const response = {
+    id: insertResult.insertId,
+    message: "Book added successfully",
+  };
+
+  return NextResponse.json(response, { status: 201 });
 }

@@ -3,6 +3,7 @@ import { BooksContract } from "../books/booksContract";
 import {
   BookSchemaExample,
   ErrorResponseSchemaExample,
+  AddedBookResponseSchemaExample,
 } from "../models/schemas";
 
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
@@ -35,6 +36,7 @@ export const OpenAPIV1 = generateOpenApi(
       },
       schemas: {
         Book: BookSchemaExample,
+        AddedBookResponse: AddedBookResponseSchemaExample,
         ErrorResponse: ErrorResponseSchemaExample,
       },
     },

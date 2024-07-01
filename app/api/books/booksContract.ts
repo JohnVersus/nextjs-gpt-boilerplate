@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { initContract } from "@ts-rest/core";
-import { BookSchema, ErrorResponseSchema } from "../models/schemas";
+import {
+  BookSchema,
+  ErrorResponseSchema,
+  AddedBookResponseSchema,
+} from "../models/schemas";
 
 const contract = initContract();
 
@@ -34,7 +38,7 @@ export const BooksContract = contract.router({
       publishedYear: z.number(),
     }),
     responses: {
-      201: BookSchema,
+      201: AddedBookResponseSchema,
       400: ErrorResponseSchema,
     },
   },

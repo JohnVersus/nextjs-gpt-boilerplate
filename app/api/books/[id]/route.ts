@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "../../config/drizzle";
 import { Book, BookSelectModel } from "../../models/book";
 import { eq } from "drizzle-orm";
 import { authenticate } from "../../utils/auth";
+import { db } from "@/app/api/config/db";
 
 export async function GET(req: NextRequest) {
   const authResponse = authenticate(req);
