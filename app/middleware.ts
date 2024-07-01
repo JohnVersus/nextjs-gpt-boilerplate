@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function middleware(req: NextRequest) {
   const startTime = Date.now();
   req.nextUrl.searchParams.set("startTime", startTime.toString());
-
+  console.log({ startTime });
   return NextResponse.next();
 }
 
