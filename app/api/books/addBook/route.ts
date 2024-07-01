@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "../../config/db";
+import { db } from "@/app/api/config/db";
 import { Book, BookInsertModel } from "../../models/book";
 import { authenticate } from "../../utils/auth";
 import { logApiRequest } from "@/app/utils/logger";

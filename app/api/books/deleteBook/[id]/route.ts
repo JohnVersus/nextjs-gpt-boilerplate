@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "../../../config/db";
+import { db } from "@/app/api/config/db";
 import { Book } from "../../../models/book";
 import { eq } from "drizzle-orm";
 import { authenticate } from "@/app/api/utils/auth";
