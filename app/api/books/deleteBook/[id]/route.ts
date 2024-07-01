@@ -16,14 +16,23 @@ export async function DELETE(req: NextRequest) {
       { status: 400 }
     );
   }
+  try {
+    const [result] = await db.delete(Book).where(eq(Book.id, id)).execute();
 
-  const [result] = await db.delete(Book).where(eq(Book.id, id)).execute();
-
-  if (result.affectedRows === 0) {
+    if (result.affectedRows === 0) {
+      return NextResponse.json(
+        { message: "Book not found", statusCode: 404 },
+        { status: 404 }
+      );
+    }
+    return new NextResponse(null, { status: 204 });
+  } catch (error) {
     return NextResponse.json(
-      { message: "Book not found", statusCode: 404 },
-      { status: 404 }
+      {
+        message: "Internal Server Error:" + `${(error as Error).message}`,
+        statusCode: 500,
+      },
+      { status: 500 }
     );
   }
-  return new NextResponse(null, { status: 204 });
 }

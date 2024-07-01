@@ -1,10 +1,6 @@
 import { z } from "zod";
 import { initContract } from "@ts-rest/core";
-import {
-  BookSchema,
-  ErrorResponseSchema,
-  AddedBookResponseSchema,
-} from "../models/schemas";
+import { BookSchema, ErrorResponseSchema } from "../models/schemas";
 
 const contract = initContract();
 
@@ -15,6 +11,7 @@ export const BooksContract = contract.router({
     responses: {
       200: z.array(BookSchema),
       400: ErrorResponseSchema,
+      500: ErrorResponseSchema,
     },
   },
   getBook: {
@@ -27,6 +24,7 @@ export const BooksContract = contract.router({
       200: BookSchema,
       400: ErrorResponseSchema,
       404: ErrorResponseSchema,
+      500: ErrorResponseSchema,
     },
   },
   addBook: {
@@ -38,8 +36,9 @@ export const BooksContract = contract.router({
       publishedYear: z.number(),
     }),
     responses: {
-      201: AddedBookResponseSchema,
+      201: BookSchema,
       400: ErrorResponseSchema,
+      500: ErrorResponseSchema,
     },
   },
   deleteBook: {
@@ -53,6 +52,7 @@ export const BooksContract = contract.router({
       204: z.null(),
       400: ErrorResponseSchema,
       404: ErrorResponseSchema,
+      500: ErrorResponseSchema,
     },
   },
 });

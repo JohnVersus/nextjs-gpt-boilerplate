@@ -16,21 +16,30 @@ export async function GET(req: NextRequest) {
       { status: 400 }
     );
   }
+  try {
+    const books: BookSelectModel[] = await db
+      .select()
+      .from(Book)
+      .where(eq(Book.id, id))
+      .execute();
 
-  const books: BookSelectModel[] = await db
-    .select()
-    .from(Book)
-    .where(eq(Book.id, id))
-    .execute();
+    const book = books[0];
 
-  const book = books[0];
+    if (!book) {
+      return NextResponse.json(
+        { message: "Book not found", statusCode: 404 },
+        { status: 404 }
+      );
+    }
 
-  if (!book) {
+    return NextResponse.json(book);
+  } catch (error) {
     return NextResponse.json(
-      { message: "Book not found", statusCode: 404 },
-      { status: 404 }
+      {
+        message: "Internal Server Error:" + `${(error as Error).message}`,
+        statusCode: 500,
+      },
+      { status: 500 }
     );
   }
-
-  return NextResponse.json(book);
 }

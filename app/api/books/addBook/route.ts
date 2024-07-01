@@ -9,19 +9,29 @@ export async function POST(req: NextRequest) {
 
   const { title, author, publishedYear }: BookInsertModel = await req.json();
 
-  const [insertResult] = await db
-    .insert(Book)
-    .values({
-      title,
-      author,
-      publishedYear,
-    })
-    .execute();
+  try {
+    const [insertResult] = await db
+      .insert(Book)
+      .values({
+        title,
+        author,
+        publishedYear,
+      })
+      .execute();
 
-  const response = {
-    id: insertResult.insertId,
-    message: "Book added successfully",
-  };
+    const response = {
+      id: insertResult.insertId,
+      message: "Book added successfully",
+    };
 
-  return NextResponse.json(response, { status: 201 });
+    return NextResponse.json(response, { status: 201 });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message: "Internal Server Error:" + `${(error as Error).message}`,
+        statusCode: 500,
+      },
+      { status: 500 }
+    );
+  }
 }

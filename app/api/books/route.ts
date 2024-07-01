@@ -7,6 +7,13 @@ export async function GET(req: NextRequest) {
   const authResponse = authenticate(req);
   if (authResponse) return authResponse;
 
-  const books: BookSelectModel[] = await db.select().from(Book).execute();
-  return NextResponse.json(books);
+  try {
+    const books: BookSelectModel[] = await db.select().from(Book).execute();
+    return NextResponse.json(books);
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Internal Server Error", statusCode: 500 },
+      { status: 500 }
+    );
+  }
 }
