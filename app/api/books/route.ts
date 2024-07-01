@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Book, BookSelectModel } from "../models/book";
 import { authenticate } from "../utils/auth";
-import { db } from "@/app/api/config/db";
+import { db } from "../config/db";
 import { logApiRequest } from "@/app/utils/logger";
 
 export async function GET(req: NextRequest) {
