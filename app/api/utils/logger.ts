@@ -1,5 +1,7 @@
+import { NextRequest } from "next/server";
+
 export function logApiRequest(
-  req: Request,
+  req: NextRequest,
   startTime: number,
   message: string,
   error?: Error

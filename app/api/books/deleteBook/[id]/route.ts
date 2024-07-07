@@ -3,16 +3,17 @@ import { Book } from "../../../models/book";
 import { eq } from "drizzle-orm";
 import { authenticate } from "../../../utils/auth";
 import { db } from "../../../config/db";
-import { logApiRequest } from "../../../../utils/logger";
+import { getCurrentUTCTime, logApiRequest } from "../../../utils";
 
 export async function DELETE(req: NextRequest) {
-  const authResponse = authenticate(req);
-  if (authResponse) return authResponse;
+  const startTime = getCurrentUTCTime();
 
-  const startTime = parseInt(
-    req.nextUrl.searchParams.get("startTime") || "",
-    10
-  );
+  const authResponse = authenticate(req);
+  if (authResponse) {
+    logApiRequest(req, startTime, "Unauthorized access attempt");
+    return authResponse;
+  }
+
   const id = parseInt(req.nextUrl.pathname.split("/").pop() || "", 10);
 
   if (isNaN(id)) {

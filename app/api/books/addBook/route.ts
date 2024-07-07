@@ -2,16 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { Book, BookInsertModel } from "../../models/book";
 import { authenticate } from "../../utils/auth";
 import { db } from "../../config/db";
-import { logApiRequest } from "../../../utils/logger";
+import { getCurrentUTCTime, logApiRequest } from "../../utils";
 
 export async function POST(req: NextRequest) {
-  const authResponse = authenticate(req);
-  if (authResponse) return authResponse;
+  const startTime = getCurrentUTCTime();
 
-  const startTime = parseInt(
-    req.nextUrl.searchParams.get("startTime") || "",
-    10
-  );
+  const authResponse = authenticate(req);
+  if (authResponse) {
+    logApiRequest(req, startTime, "Unauthorized access attempt");
+    return authResponse;
+  }
 
   const { title, author, publishedYear }: BookInsertModel = await req.json();
 
