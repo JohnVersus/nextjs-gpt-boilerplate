@@ -1,3 +1,3 @@
 export * from "./auth";
-export * from "./logger";
+export * from "./apiLogger";
 export * from "./time";
