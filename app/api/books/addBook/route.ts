@@ -1,45 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Book, BookInsertModel } from "../../models/book";
-import { authenticate } from "../../utils/auth";
+import { withAuth, withLogging } from "../../middleware";
 import { db } from "../../config/db";
-import { logApiRequest } from "../../../utils/logger";
 
-export async function POST(req: NextRequest) {
-  const authResponse = authenticate(req);
-  if (authResponse) return authResponse;
-
-  const startTime = parseInt(
-    req.nextUrl.searchParams.get("startTime") || "",
-    10
-  );
-
+async function addBookHandler(req: NextRequest) {
   const { title, author, publishedYear }: BookInsertModel = await req.json();
 
-  try {
-    const [insertResult] = await db
-      .insert(Book)
-      .values({
-        title,
-        author,
-        publishedYear,
-      })
-      .execute();
+  const [insertResult] = await db
+    .insert(Book)
+    .values({
+      title,
+      author,
+      publishedYear,
+    })
+    .execute();
 
-    const response = {
-      id: insertResult.insertId,
-      message: "Book added successfully",
-    };
+  const response = {
+    id: insertResult.insertId,
+    message: "Book added successfully",
+  };
 
-    logApiRequest(req, startTime, "Book added successfully");
-    return NextResponse.json(response, { status: 201 });
-  } catch (error) {
-    logApiRequest(req, startTime, "Failed to add book", error as Error);
-    return NextResponse.json(
-      {
-        message: "Internal Server Error",
-        statusCode: 500,
-      },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json(response, { status: 201 });
 }
+
+export const POST = withLogging(withAuth(addBookHandler));

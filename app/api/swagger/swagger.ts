@@ -7,7 +7,6 @@ import {
 } from "../models/schemas";
 
 const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
-
 export const OpenAPIV1 = generateOpenApi(
   {
     ...BooksContract,
