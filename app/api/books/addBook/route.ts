@@ -4,7 +4,8 @@ import { withAuth, withLogging } from "../../middleware";
 import { db } from "../../config/db";
 
 async function addBookHandler(req: NextRequest) {
-  const { title, author, publishedYear }: BookInsertModel = await req.json();
+  const { title, author, publishedYear, summary }: BookInsertModel =
+    await req.json();
 
   const [insertResult] = await db
     .insert(Book)
@@ -12,6 +13,7 @@ async function addBookHandler(req: NextRequest) {
       title,
       author,
       publishedYear,
+      summary,
     })
     .execute();
 
