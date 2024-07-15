@@ -31,7 +31,7 @@ const items = [
     title: "Publishable as GPT",
     description: "Easily deploy your API as a GPT on ChatGPT.",
     linkText: "View BookStore GPT",
-    linkHref: "http://****",
+    linkHref: "https://chatgpt.com/g/g-28N44QTyi-bookstore",
     status: "",
     isExternal: true,
   },

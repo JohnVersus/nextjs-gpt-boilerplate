@@ -63,7 +63,7 @@ const PrivacyPolicy = () => {
 
       <Text mb={4}>
         If you have any questions or concerns about this privacy policy, please
-        contact us at [Insert Contact Information].
+        contact using the developer email.
       </Text>
     </Container>
   );
