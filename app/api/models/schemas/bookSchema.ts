@@ -2,10 +2,11 @@ import { z } from "zod";
 
 // Define the Zod schema
 export const BookSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  author: z.string(),
-  publishedYear: z.number(),
+  id: z.number({ description: "Unique Id of a Book." }),
+  title: z.string({ description: "Title of a Book." }),
+  author: z.string({ description: "Author of a Book." }),
+  publishedYear: z.number({ description: "Published year of a Book." }),
+  summary: z.string({ description: "Short summary of a Book." }),
 });
 
 // Define the OpenAPI schema with examples
@@ -13,8 +14,8 @@ export const BookSchemaExample = {
   type: "object",
   properties: {
     id: {
-      type: "string",
-      example: "123e4567-e89b-12d3-a456-426614174000",
+      type: "integer",
+      example: 1,
     },
     title: {
       type: "string",
@@ -28,6 +29,10 @@ export const BookSchemaExample = {
       type: "integer",
       example: 2021,
     },
+    summary: {
+      type: "string",
+      example: "This is a summary of the example book.",
+    },
   },
-  required: ["id", "title", "author", "publishedYear"],
+  required: ["id", "title", "author", "publishedYear", "summary"],
 };

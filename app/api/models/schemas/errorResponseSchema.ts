@@ -2,8 +2,8 @@ import { z } from "zod";
 
 // Define the Zod schema
 export const ErrorResponseSchema = z.object({
-  message: z.string(),
-  statusCode: z.number(),
+  message: z.string({ description: "Error description." }),
+  statusCode: z.number({ description: "Error code." }),
 });
 
 // Define the OpenAPI schema with examples
