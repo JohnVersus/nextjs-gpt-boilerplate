@@ -6,7 +6,9 @@ export const BookSchema = z.object({
   title: z.string({ description: "Title of a Book." }),
   author: z.string({ description: "Author of a Book." }),
   publishedYear: z.number({ description: "Published year of a Book." }),
-  summary: z.string({ description: "Short summary of a Book." }),
+  summary: z.string({
+    description: "Short summary of a Book in 1000 characters..",
+  }),
 });
 
 // Define the OpenAPI schema with examples
