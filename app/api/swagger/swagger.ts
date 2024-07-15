@@ -13,9 +13,9 @@ export const OpenAPIV1 = generateOpenApi(
   },
   {
     info: {
-      title: "API Documentation",
+      title: "BookStore API Documentation",
       version: "1.0.0",
-      description: "API documentation for the project",
+      description: "API documentation for the BookStore demo project",
     },
     servers: [
       {

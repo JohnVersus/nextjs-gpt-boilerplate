@@ -1,4 +1,4 @@
-import { Box, Heading, Text, Button, Flex } from "@chakra-ui/react";
+import { Box, Heading, Text, Button, Flex, Link } from "@chakra-ui/react";
 import Image from "next/image";
 
 const Hero = () => {
@@ -29,9 +29,14 @@ const Hero = () => {
           This boilerplate provides a base template for building your next
           GPT-powered application.
         </Text>
-        <Button background={"bgPrimary"} variant="outline">
-          Get Started
-        </Button>
+        <Link
+          href="https://github.com/JohnVersus/nextjs-gpt-boilerplate"
+          isExternal
+        >
+          <Button background={"bgPrimary"} variant="outline">
+            Get Started
+          </Button>
+        </Link>
       </Box>
       <Box
         display={{ base: "none", md: "block" }}
@@ -45,8 +50,6 @@ const Hero = () => {
           <Image
             src="/image1.png"
             alt="GPT Boilerplate"
-            layout="intrinsic"
-            objectFit="cover"
             width={350}
             height={350}
           />

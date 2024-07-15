@@ -4,7 +4,6 @@ import {
   SimpleGrid,
   Text,
   Heading,
-  Link,
   VStack,
   Container,
   Badge,
@@ -23,10 +22,18 @@ const items = [
   {
     title: "API Schema Generation",
     description:
-      "Automatically generate a fully functional API schema based on your GPT API model.",
+      "Auto generates a fully functional API schema based on your GPT API model.",
     linkText: "View API Schema",
     linkHref: "/api/swagger",
     status: "",
+  },
+  {
+    title: "Publishable as GPT",
+    description: "Easily deploy your API as a GPT on ChatGPT.",
+    linkText: "View BookStore GPT",
+    linkHref: "http://****",
+    status: "",
+    isExternal: true,
   },
   {
     title: "Integrated Middleware",
@@ -88,6 +95,19 @@ const Roadmap = () => {
                     {item.status}
                   </Text>
                 </Badge>
+              ) : item.isExternal ? (
+                <NextLink href={item.linkHref} target="_blank">
+                  <Text
+                    fontWeight="semiBold"
+                    fontSize={"sm"}
+                    _hover={{
+                      textDecoration: "underline",
+                      textUnderlineOffset: "6px",
+                    }}
+                  >
+                    {item.linkText} &rarr;
+                  </Text>
+                </NextLink>
               ) : (
                 <NextLink href={item.linkHref || ""}>
                   <Text
