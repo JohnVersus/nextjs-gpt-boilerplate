@@ -4,7 +4,6 @@ import {
   SimpleGrid,
   Text,
   Heading,
-  Link,
   VStack,
   Container,
   Badge,
@@ -97,7 +96,7 @@ const Roadmap = () => {
                   </Text>
                 </Badge>
               ) : item.isExternal ? (
-                <Link href={item.linkHref} isExternal>
+                <NextLink href={item.linkHref} target="_blank">
                   <Text
                     fontWeight="semiBold"
                     fontSize={"sm"}
@@ -108,7 +107,7 @@ const Roadmap = () => {
                   >
                     {item.linkText} &rarr;
                   </Text>
-                </Link>
+                </NextLink>
               ) : (
                 <NextLink href={item.linkHref || ""}>
                   <Text
