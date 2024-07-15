@@ -17,6 +17,7 @@ export const OpenAPIV1 = generateOpenApi(
       version: "1.0.0",
       description: "API documentation for the BookStore demo project",
     },
+    openapi: "3.1.0",
     servers: [
       {
         url: serverUrl,
@@ -44,5 +45,8 @@ export const OpenAPIV1 = generateOpenApi(
       description: "Swagger JSON",
       url: "/api/swagger",
     },
+  },
+  {
+    setOperationId: true,
   }
 );

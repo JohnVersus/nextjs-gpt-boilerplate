@@ -48,7 +48,7 @@ const Header = () => {
         <Flex display={{ base: "none", md: "flex" }}>
           <Stack direction="row" spacing={4}>
             <NavLink href="/">Home</NavLink>
-            <NavLink href="/api/swagger">API Docs</NavLink>
+            <NavLink href="/swagger">API Docs</NavLink>
             <NavLink href="#roadmap">Roadmap</NavLink>
           </Stack>
         </Flex>
@@ -70,7 +70,7 @@ const Header = () => {
         <Box pb={4} display={{ md: "none" }} textAlign="right" pr={4}>
           <Stack as="nav" spacing={4}>
             <NavLink href="/">Home</NavLink>
-            <NavLink href="/api/swagger">API Docs</NavLink>
+            <NavLink href="/swagger">API Docs</NavLink>
             <NavLink href="#roadmap">Roadmap</NavLink>
           </Stack>
         </Box>
