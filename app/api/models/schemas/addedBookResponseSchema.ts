@@ -2,8 +2,8 @@ import { z } from "zod";
 
 // Define the Zod schema
 export const AddedBookResponseSchema = z.object({
-  id: z.number(),
-  message: z.string(),
+  id: z.number({ description: "Book Id." }),
+  message: z.string({ description: "Staus message." }),
 });
 
 // Define the OpenAPI schema with examples

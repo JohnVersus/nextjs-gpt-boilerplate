@@ -12,6 +12,7 @@ export const Book = mysqlTable("books", {
   title: varchar("title", { length: 255 }),
   author: varchar("author", { length: 255 }),
   publishedYear: int("published_year"),
+  summary: varchar("summary", { length: 1000 }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });

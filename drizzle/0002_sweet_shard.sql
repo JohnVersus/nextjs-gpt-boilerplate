@@ -1,0 +1,1 @@
+ALTER TABLE `books` ADD `summary` varchar(1000);
