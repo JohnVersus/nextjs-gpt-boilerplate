@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "./providers";
 import { fonts } from "./fonts";
+import { Footer, Header } from "./components";
 
 export const metadata: Metadata = {
   title: "GPT Boilerplate - Jumpstart your GPT project",
@@ -42,7 +43,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={fonts.inter.variable}>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <Header />
+          {children}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
