@@ -9,6 +9,10 @@ const serverSchema = z.object({
   NODE_ENV: z
     .enum(["development", "test", "production"])
     .default("development"),
+  WORKOS_CLIENT_ID: z.string().min(1),
+  WORKOS_API_KEY: z.string().min(1),
+  WORKOS_REDIRECT_URI: z.string().url(),
+  WORKOS_COOKIE_PASSWORD: z.string().min(32),
 });
 
 const clientSchema = z.object({
@@ -24,6 +28,10 @@ const serverEnv = {
   DB_PASSWORD: process.env.DB_PASSWORD,
   DB_HOST: process.env.DB_HOST,
   NODE_ENV: process.env.NODE_ENV,
+  WORKOS_CLIENT_ID: process.env.WORKOS_CLIENT_ID,
+  WORKOS_API_KEY: process.env.WORKOS_API_KEY,
+  WORKOS_REDIRECT_URI: process.env.WORKOS_REDIRECT_URI,
+  WORKOS_COOKIE_PASSWORD: process.env.WORKOS_COOKIE_PASSWORD,
 };
 
 const runtimeEnv = {
@@ -48,5 +56,9 @@ export const env = {
     | "development"
     | "test"
     | "production",
+  WORKOS_CLIENT_ID: serverEnv.WORKOS_CLIENT_ID,
+  WORKOS_API_KEY: serverEnv.WORKOS_API_KEY,
+  WORKOS_REDIRECT_URI: serverEnv.WORKOS_REDIRECT_URI,
+  WORKOS_COOKIE_PASSWORD: serverEnv.WORKOS_COOKIE_PASSWORD,
   // NEXT_PUBLIC_CLIENTVAR: runtimeEnv.NEXT_PUBLIC_CLIENTVAR,
 };

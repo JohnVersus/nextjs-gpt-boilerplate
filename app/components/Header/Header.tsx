@@ -50,6 +50,7 @@ const Header = () => {
             <NavLink href="/">Home</NavLink>
             <NavLink href="/swagger">API Docs</NavLink>
             <NavLink href="#roadmap">Roadmap</NavLink>
+            <NavLink href="/pricing">Pricing</NavLink>
           </Stack>
         </Flex>
         <IconButton
@@ -72,6 +73,7 @@ const Header = () => {
             <NavLink href="/">Home</NavLink>
             <NavLink href="/swagger">API Docs</NavLink>
             <NavLink href="#roadmap">Roadmap</NavLink>
+            <NavLink href="/pricing">Pricing</NavLink>
           </Stack>
         </Box>
       </Collapse>

@@ -21,6 +21,9 @@ const Footer = () => {
           <Link href="#roadmap" mx={2} fontSize="sm" fontWeight="medium">
             Roadmap
           </Link>
+          <Link href="/pricing" mx={2} fontSize="sm" fontWeight="medium">
+            Pricing
+          </Link>
         </Flex>
       </Flex>
     </Box>
