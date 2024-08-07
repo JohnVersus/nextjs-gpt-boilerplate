@@ -9,20 +9,15 @@ import {
   HStack,
   Stack,
 } from "@chakra-ui/react";
-import {
-  getSignInUrl,
-  getSignUpUrl,
-  getUser,
-  signOut,
-} from "@workos-inc/authkit-nextjs";
-
+import { getUser, signOut } from "@workos-inc/authkit-nextjs";
 export default async function PricingPage() {
   // Get the user session
+  const pathname = "/pricing";
   const { user } = await getUser();
 
   // Get the URL to redirect the user to AuthKit to sign in if not authenticated
-  const signInUrl = await getSignInUrl();
-  const signUpUrl = await getSignUpUrl();
+  const signInUrl = `/signIn?redirect=${pathname}`;
+  const signUpUrl = `/signUp?redirect=${pathname}`;
 
   return (
     <Box minH="100vh" display="flex" flexDirection="column">
@@ -81,7 +76,7 @@ export default async function PricingPage() {
                 </Button>
               </Link>
             ) : (
-              <Link href={signInUrl}>
+              <Link href={signUpUrl}>
                 <Button colorScheme="teal" width="full">
                   Authenticate to Subscribe
                 </Button>
@@ -111,7 +106,7 @@ export default async function PricingPage() {
                 </Button>
               </Link>
             ) : (
-              <Link href={signInUrl}>
+              <Link href={signUpUrl}>
                 <Button colorScheme="teal" width="full">
                   Authenticate to Subscribe
                 </Button>
