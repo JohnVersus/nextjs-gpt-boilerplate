@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signUp } from "./email-password";
 import { checkUserSession } from "../utils/checkUserSession";
+import { signIn } from "../signIn/email-password";
 
 type APIError = {
   status: number;
@@ -46,12 +47,29 @@ export default function SignUpWithEmailPassword() {
   const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const result = await signUp(null, formData);
-    if ("error" in result) {
-      setSignUpState({ error: result.error });
+    const signUpResult = await signUp(null, formData);
+
+    if ("error" in signUpResult) {
+      setSignUpState({ error: signUpResult.error });
     } else {
-      setSignUpState({ user: result, error: null });
-      router.push(`/signIn?redirect=${redirectUrl}&email=${result.email}`);
+      setSignUpState({ user: signUpResult, error: null });
+
+      // After successful sign-up, attempt to sign in
+      const signInResult = await signIn(null, formData);
+
+      if ("error" in signInResult) {
+        if (signInResult.error.rawData.code === "email_verification_required") {
+          router.push(
+            `/verify-email?redirect=${redirectUrl}&email=${formData.get(
+              "email"
+            )}&token=${signInResult.error.rawData.pending_authentication_token}`
+          );
+        } else {
+          setSignUpState({ error: signInResult.error });
+        }
+      } else {
+        router.push(redirectUrl); // Redirect to the specified URL or root on successful sign-in
+      }
     }
   };
 
