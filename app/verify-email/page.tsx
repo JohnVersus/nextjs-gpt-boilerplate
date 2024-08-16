@@ -10,11 +10,11 @@ import {
   VStack,
   Text,
   Flex,
-  Link,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { sendCode, verifyEmail } from "./verify-email";
+import { verifyEmail } from "./verify-email";
+import { checkUserSession } from "../utils/checkUserSession";
 
 type APIError = {
   status: number;
@@ -25,41 +25,29 @@ type APIError = {
   errors: { code: string; message: string }[];
 };
 
-type SendCodeState = {
-  error?: APIError | null;
-  user?: any;
-};
-
 type VerifyEmailState = {
   error?: APIError | null;
   user?: any;
 };
 
 export default function VerifyEmail() {
-  const [sendCodeState, setSendCodeState] = useState<SendCodeState>({
-    error: null,
-  });
   const [verifyEmailState, setVerifyEmailState] = useState<VerifyEmailState>({
     error: null,
   });
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/";
-
-  const handleSendCode = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const result = await sendCode(null, formData);
-    if ("error" in result) {
-      setSendCodeState({ error: result.error });
-    } else {
-      setSendCodeState({ user: result.user, error: null });
-    }
-  };
+  const email = searchParams.get("email");
+  const pendingAuthenticationToken = searchParams.get("token");
 
   const handleVerifyEmail = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
+    formData.append(
+      "pendingAuthenticationToken",
+      pendingAuthenticationToken || ""
+    );
+
     const result = await verifyEmail(null, formData);
     if ("error" in result) {
       setVerifyEmailState({ error: result.error });
@@ -73,61 +61,8 @@ export default function VerifyEmail() {
     if (error.errors && error.errors.length > 0) {
       return error.errors.map((err) => err.message).join(", ");
     }
-    return error.message;
+    return error.message || "Error in sending the verification code.";
   };
-
-  if (!sendCodeState.user) {
-    return (
-      <Flex
-        bg="primary"
-        color="text"
-        py={20}
-        px={10}
-        textAlign="left"
-        align="center"
-        justify="center"
-        height="80vh"
-        gap={8}
-        direction={{ base: "column", md: "row" }}
-      >
-        <Box maxW="md">
-          <Heading as="h1" size="2xl" mb={4}>
-            Verify email
-          </Heading>
-
-          <form onSubmit={handleSendCode}>
-            <VStack spacing="4">
-              <FormControl id="email" isRequired>
-                <FormLabel>Email</FormLabel>
-                <Input
-                  type="email"
-                  name="email"
-                  autoCapitalize="off"
-                  autoComplete="username"
-                  autoFocus
-                />
-              </FormControl>
-
-              <Button
-                type="submit"
-                background={"bgPrimary"}
-                variant="outline"
-                width="full"
-              >
-                Send code
-              </Button>
-            </VStack>
-          </form>
-
-          {sendCodeState.error && (
-            <Text color="red.500" mt="4">
-              {getErrorMessage(sendCodeState.error)}
-            </Text>
-          )}
-        </Box>
-      </Flex>
-    );
-  }
 
   return (
     <Flex
@@ -147,6 +82,13 @@ export default function VerifyEmail() {
           Verify email
         </Heading>
 
+        <Text mb={6}>
+          You need to verify your email before proceeding to your account.
+        </Text>
+        <Text mb={6} fontWeight="bold">
+          Email: {email}
+        </Text>
+
         <form onSubmit={handleVerifyEmail}>
           <VStack spacing="4">
             <FormControl id="code" isRequired>
@@ -157,11 +99,17 @@ export default function VerifyEmail() {
                 inputMode="numeric"
                 autoComplete="one-time-code"
                 pattern="^\d{6}$"
+                maxLength={6}
+                minLength={6}
                 autoFocus
               />
             </FormControl>
 
-            <Input type="hidden" name="userId" value={sendCodeState.user.id} />
+            <Input
+              type="hidden"
+              name="pendingAuthenticationToken"
+              value={pendingAuthenticationToken || ""}
+            />
 
             <Button
               type="submit"

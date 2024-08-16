@@ -11,11 +11,20 @@
 // to the client for security reasons.
 
 import { WorkOS } from "@workos-inc/node";
-import { revalidatePath } from "next/cache";
+import { cookies, headers } from "next/headers";
 import { env } from "../../env";
 
 const workos = new WorkOS(env.WORKOS_API_KEY);
+function IP() {
+  const FALLBACK_IP_ADDRESS = "0.0.0.0";
+  const forwardedFor = headers().get("x-forwarded-for");
 
+  if (forwardedFor) {
+    return forwardedFor.split(",")[0] ?? FALLBACK_IP_ADDRESS;
+  }
+
+  return headers().get("x-real-ip") ?? FALLBACK_IP_ADDRESS;
+}
 export async function sendCode(prevState: any, formData: FormData) {
   try {
     const users = await workos.userManagement.listUsers({
@@ -32,13 +41,33 @@ export async function sendCode(prevState: any, formData: FormData) {
 
 export async function verifyEmail(prevState: any, formData: FormData) {
   try {
-    const response = await workos.userManagement.verifyEmail({
-      userId: String(formData.get("userId")),
-      code: String(formData.get("code")),
+    const response =
+      await workos.userManagement.authenticateWithEmailVerification({
+        clientId: env.WORKOS_CLIENT_ID as string,
+        code: String(formData.get("code")),
+        session: {
+          sealSession: true,
+          cookiePassword: process.env.WORKOS_COOKIE_PASSWORD,
+        },
+        pendingAuthenticationToken: String(
+          formData.get("pendingAuthenticationToken")
+        ),
+        ipAddress: IP(),
+        userAgent: headers().get("User-Agent") || "",
+      });
+    const { user, sealedSession } = response;
+
+    // Store the session in a cookie using Next.js cookies API
+    cookies().set("wos-session", sealedSession, {
+      path: "/",
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
     });
-    revalidatePath("/users-table");
-    return response;
+
+    return { user };
   } catch (error) {
+    cookies().delete("wos-session");
     return { error: JSON.parse(JSON.stringify(error)) };
   }
 }

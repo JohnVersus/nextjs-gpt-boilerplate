@@ -12,6 +12,7 @@
 
 import { WorkOS } from "@workos-inc/node";
 import { env } from "../../env";
+import { cookies } from "next/headers";
 
 const workos = new WorkOS(env.WORKOS_API_KEY);
 
@@ -20,11 +21,26 @@ export async function signIn(prevState: any, formData: FormData) {
     // For the sake of simplicity, we directly return the user here.
     // In a real application, you would probably store the user in a token (JWT)
     // and store that token in your DB or use cookies.
-    return await workos.userManagement.authenticateWithPassword({
-      clientId: env.WORKOS_CLIENT_ID || "",
+    const user = await workos.userManagement.authenticateWithPassword({
+      clientId: process.env.WORKOS_CLIENT_ID || "",
       email: String(formData.get("email")),
       password: String(formData.get("password")),
+      session: {
+        sealSession: true,
+        cookiePassword: process.env.WORKOS_COOKIE_PASSWORD,
+      },
     });
+
+    const { user: authenticatedUser, sealedSession } = user;
+    // Store the session in a cookie using Next.js cookies API
+    cookies().set("wos-session", sealedSession, {
+      path: "/",
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+    });
+
+    return { user: authenticatedUser };
   } catch (error) {
     return { error: JSON.parse(JSON.stringify(error)) };
   }

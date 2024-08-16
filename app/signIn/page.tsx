@@ -12,9 +12,10 @@ import {
   Flex,
   Link,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "./email-password";
+import { checkUserSession } from "../utils/checkUserSession";
 
 type APIError = {
   status: number;
@@ -28,6 +29,7 @@ type APIError = {
 type SignInState = {
   error?: APIError | null;
   user?: any;
+  pendingAuthenticationToken?: string;
 };
 
 export default function SignInWithEmailPassword() {
@@ -36,12 +38,27 @@ export default function SignInWithEmailPassword() {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/";
 
+  useEffect(() => {
+    (async () => {
+      await checkUserSession(redirectUrl);
+    })();
+  }, []);
+
   const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const result = await signIn(null, formData);
     if ("error" in result) {
-      setSignInState({ error: result.error });
+      console.log(result);
+      if (result.error.rawData.code === "email_verification_required") {
+        router.push(
+          `/verify-email?redirect=${redirectUrl}&email=${formData.get(
+            "email"
+          )}&token=${result.error.rawData.pending_authentication_token}`
+        );
+      } else {
+        setSignInState({ error: result.error });
+      }
     } else {
       setSignInState({ user: result.user, error: null });
       router.push(redirectUrl); // Redirect to the specified URL or root on successful signIn

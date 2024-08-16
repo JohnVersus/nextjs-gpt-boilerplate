@@ -12,9 +12,10 @@ import {
   Flex,
   Link,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signUp } from "./email-password";
+import { checkUserSession } from "../utils/checkUserSession";
 
 type APIError = {
   status: number;
@@ -36,6 +37,12 @@ export default function SignUpWithEmailPassword() {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/";
 
+  useEffect(() => {
+    (async () => {
+      await checkUserSession(redirectUrl);
+    })();
+  }, []);
+
   const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -44,7 +51,7 @@ export default function SignUpWithEmailPassword() {
       setSignUpState({ error: result.error });
     } else {
       setSignUpState({ user: result, error: null });
-      router.push(`/verify-email?redirect=${redirectUrl}`);
+      router.push(`/signIn?redirect=${redirectUrl}&email=${result.email}`);
     }
   };
 
@@ -72,12 +79,19 @@ export default function SignUpWithEmailPassword() {
         <Heading as="h1" size="2xl" mb={4}>
           Sign-up
         </Heading>
-        <Heading as="h2" size="md" mb={8}>
-          Email + Password
-        </Heading>
 
         <form onSubmit={handleSignUp}>
           <VStack spacing="4">
+            <FormControl id="firstName">
+              <FormLabel>First Name</FormLabel>
+              <Input type="text" name="firstName" autoComplete="given-name" />
+            </FormControl>
+
+            <FormControl id="lastName">
+              <FormLabel>Last Name</FormLabel>
+              <Input type="text" name="lastName" autoComplete="family-name" />
+            </FormControl>
+
             <FormControl id="email" isRequired>
               <FormLabel>Email</FormLabel>
               <Input
@@ -97,16 +111,6 @@ export default function SignUpWithEmailPassword() {
                 autoCapitalize="off"
                 autoComplete="new-password"
               />
-            </FormControl>
-
-            <FormControl id="firstName">
-              <FormLabel>First Name</FormLabel>
-              <Input type="text" name="firstName" autoComplete="given-name" />
-            </FormControl>
-
-            <FormControl id="lastName">
-              <FormLabel>Last Name</FormLabel>
-              <Input type="text" name="lastName" autoComplete="family-name" />
             </FormControl>
 
             <Button

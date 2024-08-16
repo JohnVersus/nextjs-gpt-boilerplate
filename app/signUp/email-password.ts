@@ -19,12 +19,14 @@ export async function signUp(prevState: any, formData: FormData) {
   try {
     // For the sake of simplicity, we directly return the user here.
     // In a real application, you would probably redirect the user to signIn.
-    return await workos.userManagement.createUser({
+    const user = await workos.userManagement.createUser({
       email: String(formData.get("email")),
       password: String(formData.get("password")),
       firstName: String(formData.get("firstName")),
       lastName: String(formData.get("lastName")),
     });
+    console.log({ user });
+    return user;
   } catch (error) {
     return { error: JSON.parse(JSON.stringify(error)) };
   }
