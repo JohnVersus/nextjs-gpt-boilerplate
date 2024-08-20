@@ -57,13 +57,15 @@ export async function verifyEmail(prevState: any, formData: FormData) {
       });
     const { user, sealedSession } = response;
 
-    // Store the session in a cookie using Next.js cookies API
-    cookies().set("wos-session", sealedSession as string, {
-      path: "/",
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-    });
+    if (sealedSession) {
+      // Store the session in a cookie using Next.js cookies API
+      cookies().set("wos-session", sealedSession, {
+        path: "/",
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+      });
+    }
 
     return { user };
   } catch (error) {
