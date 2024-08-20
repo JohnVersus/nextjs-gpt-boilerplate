@@ -14,7 +14,7 @@ import {
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { verifyEmail } from "./verify-email";
-import { checkUserSession } from "../utils/checkUserSession";
+import { checkUserSession } from "../../utils/checkUserSession";
 
 type APIError = {
   status: number;

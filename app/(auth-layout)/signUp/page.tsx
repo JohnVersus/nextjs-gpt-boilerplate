@@ -14,8 +14,9 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "./email-password";
-import { checkUserSession } from "../utils/checkUserSession";
+import { signUp } from "./email-password";
+import { checkUserSession } from "../../utils/checkUserSession";
+import { signIn } from "../signIn/email-password";
 
 type APIError = {
   status: number;
@@ -26,14 +27,13 @@ type APIError = {
   errors: { code: string; message: string }[];
 };
 
-type SignInState = {
+type SignUpState = {
   error?: APIError | null;
   user?: any;
-  pendingAuthenticationToken?: string;
 };
 
-export default function SignInWithEmailPassword() {
-  const [signInState, setSignInState] = useState<SignInState>({ error: null });
+export default function SignUpWithEmailPassword() {
+  const [signUpState, setSignUpState] = useState<SignUpState>({ error: null });
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/";
@@ -44,24 +44,32 @@ export default function SignInWithEmailPassword() {
     })();
   }, []);
 
-  const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const result = await signIn(null, formData);
-    if ("error" in result) {
-      console.log(result);
-      if (result.error.rawData.code === "email_verification_required") {
-        router.push(
-          `/verify-email?redirect=${redirectUrl}&email=${formData.get(
-            "email"
-          )}&token=${result.error.rawData.pending_authentication_token}`
-        );
-      } else {
-        setSignInState({ error: result.error });
-      }
+    const signUpResult = await signUp(null, formData);
+
+    if ("error" in signUpResult) {
+      setSignUpState({ error: signUpResult.error });
     } else {
-      setSignInState({ user: result.user, error: null });
-      router.push(redirectUrl); // Redirect to the specified URL or root on successful signIn
+      setSignUpState({ user: signUpResult, error: null });
+
+      // After successful sign-up, attempt to sign in
+      const signInResult = await signIn(null, formData);
+
+      if ("error" in signInResult) {
+        if (signInResult.error.rawData.code === "email_verification_required") {
+          router.push(
+            `/verify-email?redirect=${redirectUrl}&email=${formData.get(
+              "email"
+            )}&token=${signInResult.error.rawData.pending_authentication_token}`
+          );
+        } else {
+          setSignUpState({ error: signInResult.error });
+        }
+      } else {
+        router.push(redirectUrl); // Redirect to the specified URL or root on successful sign-in
+      }
     }
   };
 
@@ -87,11 +95,21 @@ export default function SignInWithEmailPassword() {
     >
       <Box maxW="md">
         <Heading as="h1" size="2xl" mb={4}>
-          Sign-in
+          Sign-up
         </Heading>
 
-        <form onSubmit={handleSignIn}>
+        <form onSubmit={handleSignUp}>
           <VStack spacing="4">
+            <FormControl id="firstName" isRequired>
+              <FormLabel>First Name</FormLabel>
+              <Input type="text" name="firstName" autoComplete="given-name" />
+            </FormControl>
+
+            <FormControl id="lastName" isRequired>
+              <FormLabel>Last Name</FormLabel>
+              <Input type="text" name="lastName" autoComplete="family-name" />
+            </FormControl>
+
             <FormControl id="email" isRequired>
               <FormLabel>Email</FormLabel>
               <Input
@@ -109,7 +127,7 @@ export default function SignInWithEmailPassword() {
                 type="password"
                 name="password"
                 autoCapitalize="off"
-                autoComplete="current-password"
+                autoComplete="new-password"
               />
             </FormControl>
 
@@ -119,21 +137,21 @@ export default function SignInWithEmailPassword() {
               variant="outline"
               width="full"
             >
-              Sign-in
+              Sign-up
             </Button>
           </VStack>
         </form>
 
-        {signInState.error && (
+        {signUpState.error && (
           <Text color="red.500" mt="4">
-            {getErrorMessage(signInState.error)}
+            {getErrorMessage(signUpState.error)}
           </Text>
         )}
 
         <Text mt="4">
-          Don’t have an account?{" "}
-          <Link href={`/signUp?redirect=${redirectUrl}`} color="blue.500">
-            Sign up
+          Already have an account?{" "}
+          <Link href={`/signIn?redirect=${redirectUrl}`} color="blue.500">
+            Sign In
           </Link>
         </Text>
       </Box>

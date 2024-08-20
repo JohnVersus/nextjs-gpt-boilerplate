@@ -12,7 +12,7 @@
 
 import { WorkOS } from "@workos-inc/node";
 import { cookies, headers } from "next/headers";
-import { env } from "../../env";
+import { env } from "../../../env";
 
 const workos = new WorkOS(env.WORKOS_API_KEY);
 function IP() {

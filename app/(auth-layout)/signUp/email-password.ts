@@ -11,28 +11,22 @@
 // to the client for security reasons.
 
 import { WorkOS } from "@workos-inc/node";
-import { env } from "../../env";
+import { env } from "../../../env";
 
 const workos = new WorkOS(env.WORKOS_API_KEY);
 
-export async function sendReset(prevState: any, formData: FormData) {
+export async function signUp(prevState: any, formData: FormData) {
   try {
-    const email = String(formData.get("email"));
-    return await workos.userManagement.sendPasswordResetEmail({
-      email,
-      passwordResetUrl: `http://localhost:3000/reset-password?email=${email}`,
+    // For the sake of simplicity, we directly return the user here.
+    // In a real application, you would probably redirect the user to signIn.
+    const user = await workos.userManagement.createUser({
+      email: String(formData.get("email")),
+      password: String(formData.get("password")),
+      firstName: String(formData.get("firstName")),
+      lastName: String(formData.get("lastName")),
     });
-  } catch (error) {
-    return { error: JSON.parse(JSON.stringify(error)) };
-  }
-}
-
-export async function resetPassword(prevState: any, formData: FormData) {
-  try {
-    return await workos.userManagement.resetPassword({
-      newPassword: String(formData.get("newPassword")),
-      token: String(formData.get("token")),
-    });
+    console.log({ user });
+    return user;
   } catch (error) {
     return { error: JSON.parse(JSON.stringify(error)) };
   }

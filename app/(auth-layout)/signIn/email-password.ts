@@ -11,7 +11,7 @@
 // to the client for security reasons.
 
 import { WorkOS } from "@workos-inc/node";
-import { env } from "../../env";
+import { env } from "../../../env";
 import { cookies } from "next/headers";
 
 const workos = new WorkOS(env.WORKOS_API_KEY);
