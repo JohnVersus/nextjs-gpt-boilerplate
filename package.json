@@ -19,6 +19,8 @@
     "@emotion/styled": "^11.11.5",
     "@ts-rest/core": "^3.45.2",
     "@ts-rest/open-api": "^3.45.2",
+    "@workos-inc/authkit-nextjs": "^0.8.2",
+    "@workos-inc/node": "^7.21.0",
     "drizzle-kit": "^0.22.7",
     "drizzle-orm": "^0.31.0",
     "framer-motion": "^11.2.13",
