@@ -100,12 +100,12 @@ export default function SignUpWithEmailPassword() {
 
         <form onSubmit={handleSignUp}>
           <VStack spacing="4">
-            <FormControl id="firstName">
+            <FormControl id="firstName" isRequired>
               <FormLabel>First Name</FormLabel>
               <Input type="text" name="firstName" autoComplete="given-name" />
             </FormControl>
 
-            <FormControl id="lastName">
+            <FormControl id="lastName" isRequired>
               <FormLabel>Last Name</FormLabel>
               <Input type="text" name="lastName" autoComplete="family-name" />
             </FormControl>

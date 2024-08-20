@@ -58,7 +58,7 @@ export async function verifyEmail(prevState: any, formData: FormData) {
     const { user, sealedSession } = response;
 
     // Store the session in a cookie using Next.js cookies API
-    cookies().set("wos-session", sealedSession, {
+    cookies().set("wos-session", sealedSession as string, {
       path: "/",
       httpOnly: true,
       secure: true,
