@@ -24,6 +24,25 @@ const Footer = () => {
           <Link href="/pricing" mx={2} fontSize="sm" fontWeight="medium">
             Pricing
           </Link>
+          <Link
+            href="/TermsAndConditions"
+            mx={2}
+            fontSize="sm"
+            fontWeight="medium"
+          >
+            Terms and Conditions
+          </Link>
+          <Link
+            href="/CancellationAndRefundPolicy"
+            mx={2}
+            fontSize="sm"
+            fontWeight="medium"
+          >
+            Cancellation and Refund Policy
+          </Link>
+          <Link href="/PrivacyPolicy" mx={2} fontSize="sm" fontWeight="medium">
+            Privacy Policy
+          </Link>
         </Flex>
       </Flex>
     </Box>
