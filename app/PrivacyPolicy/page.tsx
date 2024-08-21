@@ -1,4 +1,4 @@
-import { Box, Heading, Text, Container } from "@chakra-ui/react";
+import { Heading, Text, Container } from "@chakra-ui/react";
 
 const PrivacyPolicy = () => {
   return (
@@ -8,7 +8,7 @@ const PrivacyPolicy = () => {
       </Heading>
 
       <Text mb={4}>
-        <strong>Effective Date:</strong> [Insert Date]
+        <strong>Effective Date:</strong> Aug 12th 2024
       </Text>
 
       <Text mb={4}>
