@@ -6,7 +6,7 @@ import { createRazorpayOrder } from "./razorpay";
 type PaymentButtonProps = {
   plan: string;
   amount: number;
-  user: { firstName: string; email: string };
+  user: { id: string; firstName: string; email: string };
 };
 
 export function PaymentButton({ plan, amount, user }: PaymentButtonProps) {
@@ -15,7 +15,13 @@ export function PaymentButton({ plan, amount, user }: PaymentButtonProps) {
 
     try {
       // Create an order using the server action
-      const order = await createRazorpayOrder(amount, "INR", receipt);
+      const order = await createRazorpayOrder(
+        user.id,
+        plan,
+        amount,
+        "INR",
+        receipt
+      );
 
       if (order && order.id) {
         // Trigger Razorpay payment
@@ -23,9 +29,9 @@ export function PaymentButton({ plan, amount, user }: PaymentButtonProps) {
           key: process.env.RAZORPAY_KEY_ID, // Replace with your Razorpay Key ID
           amount: order.amount,
           currency: order.currency,
-          name: "Your Company Name",
+          name: "GPT Boilerplate",
           description: `Payment for ${plan}`,
-          image: "/icon_balck.svg", // Add your logo here
+          image: "/icon_black.svg", // Add your logo here
           order_id: order.id,
           handler: function (response: any) {
             alert(

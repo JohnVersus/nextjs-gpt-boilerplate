@@ -72,6 +72,7 @@ export default async function PricingPage() {
                 plan="Basic Plan"
                 amount={700}
                 user={{
+                  id: user.id as string,
                   firstName: user.firstName as string,
                   email: user.email as string,
                 }}
@@ -105,6 +106,7 @@ export default async function PricingPage() {
                 plan="Pro Plan"
                 amount={1500}
                 user={{
+                  id: user.id as string,
                   firstName: user.firstName as string,
                   email: user.email as string,
                 }}

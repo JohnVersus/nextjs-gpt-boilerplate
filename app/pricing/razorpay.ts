@@ -2,8 +2,12 @@
 
 import Razorpay from "razorpay";
 import { env } from "../../env";
+import { db } from "../config/db";
+import { Payment, PaymentInsertModel } from "../models/payment";
 
 export async function createRazorpayOrder(
+  userId: string,
+  plan: string,
   amount: number,
   currency: string = "INR",
   receipt: string
@@ -21,6 +25,20 @@ export async function createRazorpayOrder(
 
   try {
     const order = await razorpay.orders.create(options);
+
+    // Store the payment details in the database
+    const paymentData: PaymentInsertModel = {
+      userId,
+      orderId: order.id,
+      plan,
+      amount,
+      currency,
+      status: "initiated",
+      receipt,
+    };
+
+    await db.insert(Payment).values(paymentData);
+
     return order;
   } catch (error) {
     console.error("Razorpay order creation failed:", error);
