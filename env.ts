@@ -13,6 +13,8 @@ const serverSchema = z.object({
   WORKOS_API_KEY: z.string().min(1),
   WORKOS_REDIRECT_URI: z.string().url(),
   WORKOS_COOKIE_PASSWORD: z.string().min(32),
+  RAZORPAY_KEY_ID: z.string().min(1),
+  RAZORPAY_KEY_SECRET: z.string().min(1),
 });
 
 const clientSchema = z.object({
@@ -33,6 +35,8 @@ const serverEnv = {
   WORKOS_REDIRECT_URI: process.env.WORKOS_REDIRECT_URI,
   SSO_ENABLED_ORGANIZATION_ID: process.env.SSO_ENABLED_ORGANIZATION_ID,
   WORKOS_COOKIE_PASSWORD: process.env.WORKOS_COOKIE_PASSWORD,
+  RAZORPAY_KEY_ID: process.env.RAZORPAY_KEY_ID,
+  RAZORPAY_KEY_SECRET: process.env.RAZORPAY_KEY_SECRET,
 };
 
 const runtimeEnv = {
@@ -62,5 +66,7 @@ export const env = {
   WORKOS_REDIRECT_URI: serverEnv.WORKOS_REDIRECT_URI,
   SSO_ENABLED_ORGANIZATION_ID: serverEnv.SSO_ENABLED_ORGANIZATION_ID,
   WORKOS_COOKIE_PASSWORD: serverEnv.WORKOS_COOKIE_PASSWORD,
+  RAZORPAY_KEY_ID: serverEnv.RAZORPAY_KEY_ID,
+  RAZORPAY_KEY_SECRET: serverEnv.RAZORPAY_KEY_SECRET,
   // NEXT_PUBLIC_CLIENTVAR: runtimeEnv.NEXT_PUBLIC_CLIENTVAR,
 };

@@ -2,20 +2,18 @@ import {
   Box,
   Heading,
   Text,
-  Button,
   Flex,
   VStack,
   Link,
-  HStack,
   Stack,
+  Button,
 } from "@chakra-ui/react";
 import { getUser, signOut } from "@workos-inc/authkit-nextjs";
+import { PaymentButton } from "./PaymentButton"; // Import the PaymentButton component
+
 export default async function PricingPage() {
-  // Get the user session
   const pathname = "/pricing";
   const { user } = await getUser();
-
-  // Get the URL to redirect the user to AuthKit to sign in if not authenticated
   const signInUrl = `/signIn?redirect=${pathname}`;
   const signUpUrl = `/signUp?redirect=${pathname}`;
 
@@ -67,18 +65,21 @@ export default async function PricingPage() {
             </Heading>
             <Text mb={4}>Access to basic features.</Text>
             <Text fontSize="2xl" fontWeight="bold" mb={4}>
-              $10/month
+              ₹700
             </Text>
             {user ? (
-              <Link href="/subscribe">
-                <Button colorScheme="teal" width="full">
-                  Subscribe Now
-                </Button>
-              </Link>
+              <PaymentButton
+                plan="Basic Plan"
+                amount={700}
+                user={{
+                  firstName: user.firstName as string,
+                  email: user.email as string,
+                }}
+              />
             ) : (
               <Link href={signUpUrl}>
                 <Button colorScheme="teal" width="full">
-                  Authenticate to Subscribe
+                  Authenticate to Buy
                 </Button>
               </Link>
             )}
@@ -97,18 +98,21 @@ export default async function PricingPage() {
             </Heading>
             <Text mb={4}>Access to all features.</Text>
             <Text fontSize="2xl" fontWeight="bold" mb={4}>
-              $30/month
+              ₹1500
             </Text>
             {user ? (
-              <Link href="/subscribe">
-                <Button colorScheme="teal" width="full">
-                  Subscribe Now
-                </Button>
-              </Link>
+              <PaymentButton
+                plan="Pro Plan"
+                amount={1500}
+                user={{
+                  firstName: user.firstName as string,
+                  email: user.email as string,
+                }}
+              />
             ) : (
               <Link href={signUpUrl}>
                 <Button colorScheme="teal" width="full">
-                  Authenticate to Subscribe
+                  Authenticate to Buy
                 </Button>
               </Link>
             )}
