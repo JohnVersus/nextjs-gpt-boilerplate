@@ -15,6 +15,7 @@ export const PaymentStatus = mysqlEnum("status", [
   "successful",
   "failed",
   "refunded",
+  "cancelled",
 ]);
 
 export const Payment = mysqlTable("payments", {

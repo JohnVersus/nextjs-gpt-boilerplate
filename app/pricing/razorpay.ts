@@ -1,6 +1,7 @@
 "use server";
 
 import Razorpay from "razorpay";
+import { eq } from "drizzle-orm";
 import { env } from "../../env";
 import { db } from "../config/db";
 import { Payment, PaymentInsertModel } from "../models/payment";
@@ -43,5 +44,28 @@ export async function createRazorpayOrder(
   } catch (error) {
     console.error("Razorpay order creation failed:", error);
     throw new Error("Failed to create Razorpay order");
+  }
+}
+
+export async function updatePaymentStatus(
+  orderId: string,
+  status: "successful" | "failed" | "pending" | "refunded" | "cancelled",
+  paymentId?: string,
+  paymentData?: string
+) {
+  try {
+    await db
+      .update(Payment)
+      .set({
+        status,
+        paymentId: paymentId ?? null,
+        paymentData: paymentData ?? null,
+      })
+      .where(eq(Payment.orderId, orderId));
+
+    console.log(`Payment status updated to ${status} for order ${orderId}`);
+  } catch (error) {
+    console.error("Failed to update payment status:", error);
+    throw new Error("Failed to update payment status");
   }
 }

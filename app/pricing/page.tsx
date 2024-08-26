@@ -41,7 +41,7 @@ export default async function PricingPage() {
             textColor="muted"
             lineHeight="xl"
           >
-            Choose the plan that best fits your needs.
+            This is only a demo page. Do not process any payments.
           </Text>
         </Box>
 

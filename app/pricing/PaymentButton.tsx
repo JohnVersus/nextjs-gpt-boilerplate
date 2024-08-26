@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@chakra-ui/react";
-import { createRazorpayOrder } from "./razorpay";
+import { createRazorpayOrder, updatePaymentStatus } from "./razorpay";
 
 type PaymentButtonProps = {
   plan: string;
@@ -12,6 +12,7 @@ type PaymentButtonProps = {
 export function PaymentButton({ plan, amount, user }: PaymentButtonProps) {
   const handlePayment = async () => {
     const receipt = `${plan}_${Date.now()}`;
+    let orderId: string | undefined;
 
     try {
       // Create an order using the server action
@@ -23,7 +24,10 @@ export function PaymentButton({ plan, amount, user }: PaymentButtonProps) {
         receipt
       );
 
+      // Assign orderId if the order is created successfully
       if (order && order.id) {
+        orderId = order.id;
+
         // Trigger Razorpay payment
         const razorpayOptions = {
           key: process.env.RAZORPAY_KEY_ID, // Replace with your Razorpay Key ID
@@ -37,11 +41,24 @@ export function PaymentButton({ plan, amount, user }: PaymentButtonProps) {
             alert(
               "Payment Successful! Payment ID: " + response.razorpay_payment_id
             );
-            // You can handle post-payment actions here (e.g., storing payment info)
+            // Handle successful payment here
+            updatePaymentStatus(
+              order.id,
+              "successful",
+              response.razorpay_payment_id,
+              JSON.stringify(response)
+            );
           },
           prefill: {
             name: user.firstName,
             email: user.email,
+          },
+          modal: {
+            ondismiss: async function () {
+              // Handle the case when the user closes the payment modal
+              console.log("Payment modal closed by the user");
+              await updatePaymentStatus(order.id, "cancelled");
+            },
           },
         };
 
@@ -51,6 +68,11 @@ export function PaymentButton({ plan, amount, user }: PaymentButtonProps) {
     } catch (error) {
       console.error("Error in payment:", error);
       alert("There was an issue processing your payment.");
+
+      // Update the payment status to "failed" if the orderId is available
+      if (orderId) {
+        await updatePaymentStatus(orderId, "failed");
+      }
     }
   };
 
