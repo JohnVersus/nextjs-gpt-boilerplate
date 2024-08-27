@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Book } from "../../../models/book";
 import { eq } from "drizzle-orm";
 import { withAuth, withLogging } from "../../../middleware";
-import { db } from "../../../config/db";
+import { db } from "../../../../config/db";
 
 async function deleteBookHandler(req: NextRequest) {
   const id = parseInt(req.nextUrl.pathname.split("/").pop() || "", 10);
