@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Book, BookInsertModel } from "../../models/book";
 import { withAuth, withLogging } from "../../middleware";
-import { db } from "../../config/db";
+import { db } from "../../../config/db";
 
 async function addBookHandler(req: NextRequest) {
   const { title, author, publishedYear, summary }: BookInsertModel =

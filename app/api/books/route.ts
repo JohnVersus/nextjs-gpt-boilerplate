@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Book, BookSelectModel } from "../models/book";
-import { db } from "../config/db";
+import { db } from "../../config/db";
 import { withAuth, withLogging } from "../middleware";
 
 type BookWithoutSummary = Omit<

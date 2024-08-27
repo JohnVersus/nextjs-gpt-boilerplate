@@ -3,6 +3,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { fonts } from "./fonts";
 import { Footer, Header } from "./components";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "GPT Boilerplate - Jumpstart your GPT project",
@@ -45,6 +46,7 @@ export default function RootLayout({
       <body>
         <Providers>
           <Header />
+          <Script src="https://checkout.razorpay.com/v1/checkout.js" />
           {children}
           <Footer />
         </Providers>
