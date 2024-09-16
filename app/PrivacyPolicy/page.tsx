@@ -136,7 +136,8 @@ const PrivacyPolicy = () => {
 
       <Text mb={4}>
         If you have any questions or concerns about this privacy policy, please
-        contact us using the developer email.
+        contact us using the developer email: admin@johnversus.dev, Phone:
+        +917660084378.
       </Text>
     </Container>
   );

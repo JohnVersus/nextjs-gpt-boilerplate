@@ -16,10 +16,10 @@ const TermsAndConditions = () => {
         For the purpose of these Terms and Conditions, the term "we", "us",
         "our" used anywhere on this page shall mean John's Tech, whose
         registered/operational office is 6-4, Pilla Suribabu Bungalow, Patha
-        vuuru, Penugollu Dharmavaram, S Rayavaram Visakhapatnam ANDHRA PRADESH
-        531060. "You", "your", "user", "subscriber" shall mean any natural or
-        legal person who is visiting our website and/or subscribed to our
-        services.
+        vuuru, Penugollu Dharmavaram, S Rayavaram Visakhapatnam, Andhra Pradesh,
+        Pincode: 531060. "You", "your", "user", "subscriber" shall mean any
+        natural or legal person who is visiting our website and/or subscribed to
+        our services.
       </Text>
 
       <Text mb={4}>
