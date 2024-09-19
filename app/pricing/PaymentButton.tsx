@@ -1,7 +1,9 @@
 "use client";
 
-import { Button } from "@chakra-ui/react";
+import { Button, useToast } from "@chakra-ui/react";
 import { createRazorpayOrder, updatePaymentStatus } from "./razorpay";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type PaymentButtonProps = {
   plan: string;
@@ -10,7 +12,12 @@ type PaymentButtonProps = {
 };
 
 export function PaymentButton({ plan, amount, user }: PaymentButtonProps) {
+  const [isLoading, setIsLoading] = useState(false);
+  const toast = useToast();
+  const router = useRouter(); // Import and initialize the router
+
   const handlePayment = async () => {
+    setIsLoading(true);
     const receipt = `${plan}_${Date.now()}`;
     let orderId: string | undefined;
 
@@ -30,17 +37,14 @@ export function PaymentButton({ plan, amount, user }: PaymentButtonProps) {
 
         // Trigger Razorpay payment
         const razorpayOptions = {
-          key: process.env.RAZORPAY_KEY_ID, // Replace with your Razorpay Key ID
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
           amount: order.amount,
           currency: order.currency,
           name: "GPT Boilerplate",
           description: `Payment for ${plan}`,
-          image: "/icon_black.svg", // Add your logo here
+          image: "/icon_black.svg",
           order_id: order.id,
           handler: function (response: any) {
-            alert(
-              "Payment Successful! Payment ID: " + response.razorpay_payment_id
-            );
             // Handle successful payment here
             updatePaymentStatus(
               order.id,
@@ -48,6 +52,18 @@ export function PaymentButton({ plan, amount, user }: PaymentButtonProps) {
               response.razorpay_payment_id,
               JSON.stringify(response)
             );
+
+            toast({
+              title: "Payment Successful",
+              description: "Your payment was successful!",
+              status: "success",
+              duration: 5000,
+              isClosable: true,
+              position: "top-right",
+            });
+
+            // Use router.refresh() instead of window.location.reload()
+            router.refresh();
           },
           prefill: {
             name: user.firstName,
@@ -58,26 +74,68 @@ export function PaymentButton({ plan, amount, user }: PaymentButtonProps) {
               // Handle the case when the user closes the payment modal
               console.log("Payment modal closed by the user");
               await updatePaymentStatus(order.id, "cancelled");
+
+              toast({
+                title: "Payment Cancelled",
+                description: "You have cancelled the payment.",
+                status: "warning",
+                duration: 5000,
+                isClosable: true,
+                position: "top-right",
+              });
+
+              setIsLoading(false);
             },
           },
         };
 
         const razorpay = new (window as any).Razorpay(razorpayOptions);
+        razorpay.on("payment.failed", async function (response: any) {
+          console.error("Payment failed:", response.error);
+
+          await updatePaymentStatus(order.id, "failed");
+
+          toast({
+            title: "Payment Failed",
+            description: "There was an issue processing your payment.",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+            position: "top-right",
+          });
+
+          setIsLoading(false);
+        });
+
         razorpay.open();
       }
     } catch (error) {
       console.error("Error in payment:", error);
-      alert("There was an issue processing your payment.");
+      toast({
+        title: "Payment Error",
+        description: "There was an issue initiating your payment.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top-right",
+      });
 
       // Update the payment status to "failed" if the orderId is available
       if (orderId) {
         await updatePaymentStatus(orderId, "failed");
       }
+
+      setIsLoading(false);
     }
   };
 
   return (
-    <Button colorScheme="teal" width="full" onClick={handlePayment}>
+    <Button
+      colorScheme="teal"
+      width="full"
+      onClick={handlePayment}
+      isLoading={isLoading}
+    >
       Buy Now
     </Button>
   );
