@@ -6,6 +6,11 @@ import { env } from "../../env";
 import { db } from "../config/db";
 import { Payment, PaymentInsertModel } from "../models/payment";
 
+const razorpay = new Razorpay({
+  key_id: env.RAZORPAY_KEY_ID as "",
+  key_secret: env.RAZORPAY_KEY_SECRET,
+});
+
 export async function createRazorpayOrder(
   userId: string,
   plan: string,
@@ -13,11 +18,6 @@ export async function createRazorpayOrder(
   currency: string = "INR",
   receipt: string
 ) {
-  const razorpay = new Razorpay({
-    key_id: env.RAZORPAY_KEY_ID as "",
-    key_secret: env.RAZORPAY_KEY_SECRET,
-  });
-
   const options = {
     amount: amount * 100, // Amount in the smallest currency unit (e.g., paise)
     currency: currency,
@@ -67,5 +67,28 @@ export async function updatePaymentStatus(
   } catch (error) {
     console.error("Failed to update payment status:", error);
     throw new Error("Failed to update payment status");
+  }
+}
+
+// New function to check payment status
+export async function checkPaymentStatus(orderId: string) {
+  try {
+    const payments = await razorpay.orders.fetchPayments(orderId);
+    if (payments.items.length > 0) {
+      const payment = payments.items[0];
+
+      if (payment.status === "captured") {
+        return "paid";
+      } else if (payment.status === "failed") {
+        return "failed";
+      } else {
+        return "pending";
+      }
+    } else {
+      return "cancelled";
+    }
+  } catch (error) {
+    console.error("Error fetching payment status from Razorpay:", error);
+    return "cancelled";
   }
 }
