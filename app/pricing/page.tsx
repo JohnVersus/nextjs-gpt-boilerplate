@@ -18,6 +18,7 @@ import { PaymentButton } from "./PaymentButton";
 import { db } from "../config/db";
 import { Payment, PaymentSelectModel } from "../models/payment";
 import { eq, desc } from "drizzle-orm";
+import { checkPaymentStatus, updatePaymentStatus } from "./razorpay";
 
 export default async function PricingPage() {
   const pathname = "/pricing";
@@ -28,24 +29,97 @@ export default async function PricingPage() {
   let userPayments: PaymentSelectModel[] = [];
   let hasBasicPlan = false;
   let hasProPlan = false;
+  let errorMessage = null;
+
+  // Initialize lastFailedPayments
+  const lastFailedPayments: { [plan: string]: PaymentSelectModel | undefined } =
+    {
+      "Basic Plan": undefined,
+      "Pro Plan": undefined,
+    };
 
   if (user) {
-    // Fetch user's payments
-    userPayments = await db
-      .select()
-      .from(Payment)
-      .where(eq(Payment.userId, user.id))
-      .orderBy(desc(Payment.createdAt));
+    try {
+      // Fetch user's payments
+      userPayments = await db
+        .select()
+        .from(Payment)
+        .where(eq(Payment.userId, user.id))
+        .orderBy(desc(Payment.createdAt));
+    } catch (error) {
+      console.error("Error fetching user payments:", error);
+      errorMessage = "Error fetching user payments. Please try again later.";
+    }
 
-    // Determine if the user has purchased Basic or Pro plan
-    hasBasicPlan = userPayments.some(
-      (payment) =>
-        payment.plan === "Basic Plan" && payment.status === "successful"
-    );
-    hasProPlan = userPayments.some(
-      (payment) =>
-        payment.plan === "Pro Plan" && payment.status === "successful"
-    );
+    if (!errorMessage) {
+      // Determine if the user has purchased Basic or Pro plan
+      hasBasicPlan = userPayments.some(
+        (payment) =>
+          payment.plan === "Basic Plan" && payment.status === "successful"
+      );
+      hasProPlan = userPayments.some(
+        (payment) =>
+          payment.plan === "Pro Plan" && payment.status === "successful"
+      );
+
+      const pendingStatuses = ["initiated", "pending"];
+      const failedStatuses = ["failed", "cancelled"];
+
+      // Update lastFailedPayments with actual values
+      lastFailedPayments["Basic Plan"] = !hasBasicPlan
+        ? userPayments.find(
+            (payment) =>
+              [...failedStatuses, ...pendingStatuses].includes(
+                payment.status
+              ) && payment.plan === "Basic Plan"
+          )
+        : undefined;
+
+      lastFailedPayments["Pro Plan"] = !hasProPlan
+        ? userPayments.find(
+            (payment) =>
+              [...failedStatuses, ...pendingStatuses].includes(
+                payment.status
+              ) && payment.plan === "Pro Plan"
+          )
+        : undefined;
+
+      // Check and update payment status if necessary
+      for (const plan in lastFailedPayments) {
+        const payment = lastFailedPayments[plan];
+        if (payment && pendingStatuses.includes(payment.status)) {
+          try {
+            // Check the payment status from Razorpay
+            const paymentStatus = await checkPaymentStatus(payment.orderId);
+
+            if (paymentStatus === "paid") {
+              // Update the payment status in the database
+              await updatePaymentStatus(payment.orderId, "successful");
+              payment.status = "successful";
+            } else if (paymentStatus === "failed") {
+              await updatePaymentStatus(payment.orderId, "failed");
+              payment.status = "failed";
+            }
+            // No need to handle "cancelled" or other statuses here
+          } catch (error) {
+            console.error("Error updating payment status:", error);
+            errorMessage =
+              "Error updating payment status. Please try again later.";
+            break; // Exit the loop if there's an error
+          }
+        }
+      }
+
+      // Recalculate hasBasicPlan and hasProPlan after updating statuses
+      hasBasicPlan = userPayments.some(
+        (payment) =>
+          payment.plan === "Basic Plan" && payment.status === "successful"
+      );
+      hasProPlan = userPayments.some(
+        (payment) =>
+          payment.plan === "Pro Plan" && payment.status === "successful"
+      );
+    }
   }
 
   // Calculate upgrade amount
@@ -59,25 +133,6 @@ export default async function PricingPage() {
     if (plan === "Pro Plan") return hasProPlan;
     return false;
   };
-
-  // Find the last failed or cancelled payment for each plan the user doesn't have
-  const lastFailedPayments: { [plan: string]: PaymentSelectModel | undefined } =
-    {
-      "Basic Plan": !hasBasicPlan
-        ? userPayments.find(
-            (payment) =>
-              (payment.status === "failed" || payment.status === "cancelled") &&
-              payment.plan === "Basic Plan"
-          )
-        : undefined,
-      "Pro Plan": !hasProPlan
-        ? userPayments.find(
-            (payment) =>
-              (payment.status === "failed" || payment.status === "cancelled") &&
-              payment.plan === "Pro Plan"
-          )
-        : undefined,
-    };
 
   // Date formatter using Intl
   const dateFormatter = new Intl.DateTimeFormat("en-GB", {
@@ -227,61 +282,69 @@ export default async function PricingPage() {
             </Box>
           </Box>
         </Stack>
-
-        {/* Transaction History Section */}
-        {user && (
-          <Box width="full" maxW="800px" mt={10}>
-            <Heading size="lg" mb={4}>
-              Transaction History
-            </Heading>
-            {userPayments.length > 0 ? (
-              <Table variant="simple">
-                <Thead>
-                  <Tr>
-                    <Th>Plan</Th>
-                    <Th>Amount</Th>
-                    <Th>Status</Th>
-                    <Th>Date</Th>
-                    <Th>Action</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {userPayments.map((payment) => (
-                    <Tr key={payment.orderId}>
-                      <Td>{payment.plan}</Td>
-                      <Td>₹{payment.amount}</Td>
-                      <Td textTransform="capitalize">{payment.status}</Td>
-                      <Td>
-                        {dateFormatter.format(new Date(payment.createdAt))}
-                      </Td>
-                      <Td>
-                        {["failed", "cancelled"].includes(payment.status) &&
-                        !hasPlan(payment.plan) &&
-                        payment.orderId ===
-                          lastFailedPayments[payment.plan]?.orderId ? (
-                          <PaymentButton
-                            plan={payment.plan}
-                            amount={payment.amount}
-                            user={{
-                              id: user.id as string,
-                              firstName: user.firstName as string,
-                              email: user.email as string,
-                            }}
-                            orderId={payment.orderId} // Pass existing orderId for retry
-                            isRetry={true}
-                          />
-                        ) : (
-                          "-"
-                        )}
-                      </Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            ) : (
-              <Text>No transactions found.</Text>
-            )}
+        {errorMessage && (
+          <Box mb={8}>
+            <Text color="red.500" fontSize="lg">
+              {errorMessage}
+            </Text>
           </Box>
+        )}
+        {!errorMessage && userPayments.length > 0 && (
+          <>
+            {/* Transaction History Section */}
+            <Box width="full" maxW="800px" mt={10}>
+              <Heading size="lg" mb={4}>
+                Transaction History
+              </Heading>
+              {userPayments.length > 0 ? (
+                <Table variant="simple">
+                  <Thead>
+                    <Tr>
+                      <Th>Plan</Th>
+                      <Th>Amount</Th>
+                      <Th>Status</Th>
+                      <Th>Date</Th>
+                      <Th>Action</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {userPayments.map((payment) => (
+                      <Tr key={payment.orderId}>
+                        <Td>{payment.plan}</Td>
+                        <Td>₹{payment.amount}</Td>
+                        <Td textTransform="capitalize">{payment.status}</Td>
+                        <Td>
+                          {dateFormatter.format(new Date(payment.createdAt))}
+                        </Td>
+                        <Td>
+                          {["failed", "cancelled"].includes(payment.status) &&
+                          !hasPlan(payment.plan) &&
+                          payment.orderId ===
+                            lastFailedPayments[payment.plan]?.orderId ? (
+                            <PaymentButton
+                              plan={payment.plan}
+                              amount={payment.amount}
+                              user={{
+                                id: user?.id as string,
+                                firstName: user?.firstName as string,
+                                email: user?.email as string,
+                              }}
+                              orderId={payment.orderId} // Pass existing orderId for retry
+                              isRetry={true}
+                            />
+                          ) : (
+                            "-"
+                          )}
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              ) : (
+                <Text>No transactions found.</Text>
+              )}
+            </Box>
+          </>
         )}
 
         {user && (

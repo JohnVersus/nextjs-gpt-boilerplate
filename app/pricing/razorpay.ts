@@ -7,8 +7,8 @@ import { db } from "../config/db";
 import { Payment, PaymentInsertModel } from "../models/payment";
 
 const razorpay = new Razorpay({
-  key_id: env.RAZORPAY_KEY_ID as "",
-  key_secret: env.RAZORPAY_KEY_SECRET,
+  key_id: env.RAZORPAY_KEY_ID as string,
+  key_secret: env.RAZORPAY_KEY_SECRET as string,
 });
 
 export async function createRazorpayOrder(
@@ -66,7 +66,7 @@ export async function updatePaymentStatus(
     console.log(`Payment status updated to ${status} for order ${orderId}`);
   } catch (error) {
     console.error("Failed to update payment status:", error);
-    throw new Error("Failed to update payment status");
+    throw error; // Re-throw the error to be caught in the calling function
   }
 }
 
@@ -75,7 +75,7 @@ export async function checkPaymentStatus(orderId: string) {
   try {
     const payments = await razorpay.orders.fetchPayments(orderId);
     if (payments.items.length > 0) {
-      const payment = payments.items[0];
+      const payment = payments.items[payments.items.length - 1]; // Get the last payment attempt
 
       if (payment.status === "captured") {
         return "paid";

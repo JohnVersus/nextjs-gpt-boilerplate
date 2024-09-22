@@ -58,29 +58,43 @@ export function PaymentButton({
           key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
           amount: amount * 100, // Amount in paise
           currency: "INR",
-          name: "GPT Boilerplate",
+          name: "GPT SaaS Boilerplate",
           description: `Payment for ${plan}`,
           image: "/icon_black.svg",
           order_id: orderId,
           handler: async function (response: any) {
-            // Payment was successful
-            await updatePaymentStatus(
-              orderId!,
-              "successful",
-              response.razorpay_payment_id,
-              JSON.stringify(response)
-            );
+            try {
+              // Payment was successful
+              await updatePaymentStatus(
+                orderId!,
+                "successful",
+                response.razorpay_payment_id,
+                JSON.stringify(response)
+              );
 
-            toast({
-              title: "Payment Successful",
-              description: "Your payment was successful!",
-              status: "success",
-              duration: 5000,
-              isClosable: true,
-              position: "top-right",
-            });
+              toast({
+                title: "Payment Successful",
+                description: "Your payment was successful!",
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+                position: "top-right",
+              });
 
-            router.refresh();
+              router.refresh();
+            } catch (error) {
+              console.error("Failed to update payment status:", error);
+
+              toast({
+                title: "Database Error",
+                description:
+                  "Your payment was successful, but we encountered an error updating your account. Please refresh the page.",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+                position: "top-right",
+              });
+            }
           },
           prefill: {
             name: user.firstName,
@@ -95,19 +109,33 @@ export function PaymentButton({
               const paymentStatus = await checkPaymentStatus(orderId!);
 
               if (paymentStatus === "paid") {
-                // Payment was successful
-                await updatePaymentStatus(orderId!, "successful");
+                try {
+                  // Payment was successful
+                  await updatePaymentStatus(orderId!, "successful");
 
-                toast({
-                  title: "Payment Successful",
-                  description: "Your payment was successful!",
-                  status: "success",
-                  duration: 5000,
-                  isClosable: true,
-                  position: "top-right",
-                });
+                  toast({
+                    title: "Payment Successful",
+                    description: "Your payment was successful!",
+                    status: "success",
+                    duration: 5000,
+                    isClosable: true,
+                    position: "top-right",
+                  });
 
-                router.refresh();
+                  router.refresh();
+                } catch (error) {
+                  console.error("Failed to update payment status:", error);
+
+                  toast({
+                    title: "Database Error",
+                    description:
+                      "Your payment was successful, but we encountered an error updating your account. Please refresh the page.",
+                    status: "error",
+                    duration: 5000,
+                    isClosable: true,
+                    position: "top-right",
+                  });
+                }
               } else if (paymentStatus === "failed") {
                 // Payment failed
                 await updatePaymentStatus(orderId!, "failed");
