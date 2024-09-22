@@ -58,7 +58,7 @@ export function PaymentButton({
           key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
           amount: amount * 100, // Amount in paise
           currency: "INR",
-          name: "GPT SaaS Boilerplate",
+          name: "GPT Boilerplate",
           description: `Payment for ${plan}`,
           image: "/icon_black.svg",
           order_id: orderId,
@@ -106,7 +106,9 @@ export function PaymentButton({
               console.log("Payment modal closed by the user");
 
               // Fetch the payment status from Razorpay
-              const paymentStatus = await checkPaymentStatus(orderId!);
+              const { status: paymentStatus } = await checkPaymentStatus(
+                orderId!
+              );
 
               if (paymentStatus === "paid") {
                 try {
@@ -165,6 +167,7 @@ export function PaymentButton({
                 });
 
                 setIsLoading(false);
+                router.refresh();
               }
             },
           },

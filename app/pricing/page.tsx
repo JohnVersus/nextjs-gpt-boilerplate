@@ -87,14 +87,29 @@ export default async function PricingPage() {
       // Check and update payment status if necessary
       for (const plan in lastFailedPayments) {
         const payment = lastFailedPayments[plan];
-        if (payment && pendingStatuses.includes(payment.status)) {
+        if (
+          payment &&
+          [...failedStatuses, ...pendingStatuses].includes(payment.status)
+        ) {
           try {
             // Check the payment status from Razorpay
-            const paymentStatus = await checkPaymentStatus(payment.orderId);
-
+            const {
+              status: paymentStatus,
+              paymentId,
+              paymentData,
+            } = await checkPaymentStatus(payment.orderId);
             if (paymentStatus === "paid") {
               // Update the payment status in the database
-              await updatePaymentStatus(payment.orderId, "successful");
+              await updatePaymentStatus(
+                payment.orderId,
+                "successful",
+                paymentId || "",
+                JSON.stringify({
+                  razorpay_payment_id: paymentData?.id,
+                  razorpay_order_id: paymentData?.order_id,
+                  razorpay_signature: "to be referred in razorpay dashboard",
+                })
+              );
               payment.status = "successful";
             } else if (paymentStatus === "failed") {
               await updatePaymentStatus(payment.orderId, "failed");

@@ -18,14 +18,13 @@ export async function createRazorpayOrder(
   currency: string = "INR",
   receipt: string
 ) {
-  const options = {
-    amount: amount * 100, // Amount in the smallest currency unit (e.g., paise)
-    currency: currency,
-    receipt: receipt,
-  };
-
   try {
-    const order = await razorpay.orders.create(options);
+    const order = await razorpay.orders.create({
+      amount: amount * 100, // Amount in the smallest currency unit (e.g., paise)
+      currency: currency,
+      receipt: receipt,
+      // method: "card",
+    });
 
     // Store the payment details in the database
     const paymentData: PaymentInsertModel = {
@@ -71,24 +70,45 @@ export async function updatePaymentStatus(
 }
 
 // New function to check payment status
+
 export async function checkPaymentStatus(orderId: string) {
   try {
     const payments = await razorpay.orders.fetchPayments(orderId);
+
     if (payments.items.length > 0) {
-      const payment = payments.items[payments.items.length - 1]; // Get the last payment attempt
+      const payment = payments.items[payments.items.length - 1]; // Get the latest payment attempt
+      const paymentData = payment; // The full payment object
+
+      let status: "paid" | "failed" | "pending" | "cancelled";
 
       if (payment.status === "captured") {
-        return "paid";
+        status = "paid";
       } else if (payment.status === "failed") {
-        return "failed";
+        status = "failed";
+      } else if (payment.status === "authorized") {
+        status = "pending";
       } else {
-        return "pending";
+        status = "pending"; // Other statuses can be mapped to 'pending' if appropriate
       }
+      return {
+        status,
+        paymentId: payment.id,
+        paymentData: paymentData, // The full payment object
+      };
     } else {
-      return "cancelled";
+      // No payment attempts found for this order
+      return {
+        status: "cancelled",
+        paymentId: null,
+        paymentData: null,
+      };
     }
   } catch (error) {
     console.error("Error fetching payment status from Razorpay:", error);
-    return "cancelled";
+    return {
+      status: "cancelled",
+      paymentId: null,
+      paymentData: null,
+    };
   }
 }
