@@ -1,76 +1,20 @@
-"use client";
-
-import {
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  Heading,
-  VStack,
-  Text,
-  Flex,
-  Link,
-} from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "./email-password";
+import { Box, Heading, Flex, Text, Link } from "@chakra-ui/react";
+import SignInForm from "./SignInForm";
+import { Suspense } from "react";
 import { checkUserSession } from "../../utils/checkUserSession";
 
-type APIError = {
-  status: number;
-  name: string;
-  message: string;
-  requestID: string;
-  code: string;
-  errors: { code: string; message: string }[];
-};
+interface SignInPageProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
 
-type SignInState = {
-  error?: APIError | null;
-  user?: any;
-  pendingAuthenticationToken?: string;
-};
+export default async function SignInWithEmailPassword({
+  searchParams,
+}: SignInPageProps) {
+  const redirectUrl =
+    typeof searchParams.redirect === "string" ? searchParams.redirect : "/";
 
-export default function SignInWithEmailPassword() {
-  const [signInState, setSignInState] = useState<SignInState>({ error: null });
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirectUrl = searchParams.get("redirect") || "/";
-
-  useEffect(() => {
-    (async () => {
-      await checkUserSession(redirectUrl);
-    })();
-  }, []);
-
-  const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const result = await signIn(null, formData);
-    if ("error" in result) {
-      console.log(result);
-      if (result.error.rawData.code === "email_verification_required") {
-        router.push(
-          `/verify-email?redirect=${redirectUrl}&email=${formData.get(
-            "email"
-          )}&token=${result.error.rawData.pending_authentication_token}`
-        );
-      } else {
-        setSignInState({ error: result.error });
-      }
-    } else {
-      setSignInState({ user: result.user, error: null });
-      router.push(redirectUrl); // Redirect to the specified URL or root on successful signIn
-    }
-  };
-
-  const getErrorMessage = (error: APIError) => {
-    if (error.errors && error.errors.length > 0) {
-      return error.errors.map((err) => err.message).join(", ");
-    }
-    return error.message;
-  };
+  // Server-side session check
+  await checkUserSession(redirectUrl);
 
   return (
     <Flex
@@ -81,7 +25,7 @@ export default function SignInWithEmailPassword() {
       textAlign="left"
       align="center"
       justify="center"
-      height="80vh"
+      height="90vh"
       gap={8}
       direction={{ base: "column", md: "row" }}
     >
@@ -90,49 +34,14 @@ export default function SignInWithEmailPassword() {
           Sign-in
         </Heading>
 
-        <form onSubmit={handleSignIn}>
-          <VStack spacing="4">
-            <FormControl id="email" isRequired>
-              <FormLabel>Email</FormLabel>
-              <Input
-                type="email"
-                name="email"
-                autoCapitalize="off"
-                autoComplete="username"
-                autoFocus
-              />
-            </FormControl>
-
-            <FormControl id="password" isRequired>
-              <FormLabel>Password</FormLabel>
-              <Input
-                type="password"
-                name="password"
-                autoCapitalize="off"
-                autoComplete="current-password"
-              />
-            </FormControl>
-
-            <Button
-              type="submit"
-              background={"bgPrimary"}
-              variant="outline"
-              width="full"
-            >
-              Sign-in
-            </Button>
-          </VStack>
-        </form>
-
-        {signInState.error && (
-          <Text color="red.500" mt="4">
-            {getErrorMessage(signInState.error)}
-          </Text>
-        )}
+        {/* Use Suspense to show a fallback while the client component loads */}
+        <Suspense fallback={<div>Loading...</div>}>
+          <SignInForm redirectUrl={redirectUrl} />
+        </Suspense>
 
         <Text mt="4">
           Don’t have an account?{" "}
-          <Link href={`/signUp?redirect=${redirectUrl}`} color="blue.500">
+          <Link href={`/signup?redirect=${redirectUrl}`} color="blue.500">
             Sign up
           </Link>
         </Text>

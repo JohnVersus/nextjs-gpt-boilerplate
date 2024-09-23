@@ -23,8 +23,8 @@ import { checkPaymentStatus, updatePaymentStatus } from "./razorpay";
 export default async function PricingPage() {
   const pathname = "/pricing";
   const { user } = await getUser();
-  const signInUrl = `/signIn?redirect=${pathname}`;
-  const signUpUrl = `/signUp?redirect=${pathname}`;
+  const signInUrl = `/signin?redirect=${pathname}`;
+  const signUpUrl = `/signup?redirect=${pathname}`;
 
   let userPayments: PaymentSelectModel[] = [];
   let hasBasicPlan = false;
@@ -48,7 +48,8 @@ export default async function PricingPage() {
         .orderBy(desc(Payment.createdAt));
     } catch (error) {
       console.error("Error fetching user payments:", error);
-      errorMessage = "Error fetching user payments. Please try again later.";
+      errorMessage =
+        "Error fetching user payments. Please refesh the page or try again later.";
     }
 
     if (!errorMessage) {
@@ -119,7 +120,7 @@ export default async function PricingPage() {
           } catch (error) {
             console.error("Error updating payment status:", error);
             errorMessage =
-              "Error updating payment status. Please try again later.";
+              "Error updating payment status. Please refesh the page or try again later.";
             break; // Exit the loop if there's an error
           }
         }

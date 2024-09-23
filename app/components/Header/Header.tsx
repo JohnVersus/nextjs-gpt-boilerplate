@@ -41,9 +41,11 @@ const Header = () => {
       <Flex maxW="7xl" mx="auto" px={4} align="center" justify="space-between">
         <Flex align="center">
           <Image src="/icon.svg" alt="Logo" boxSize="24px" mr={2} />
-          <Text fontSize="lg" fontWeight="bold">
-            GPT Boilerplate
-          </Text>
+          <NextLink href="/">
+            <Text fontSize="lg" fontWeight="bold" textDecoration={"none"}>
+              GPT Boilerplate
+            </Text>
+          </NextLink>
         </Flex>
         <Flex display={{ base: "none", md: "flex" }}>
           <Stack direction="row" spacing={4}>
