@@ -20,7 +20,7 @@ const NavLink = ({
   children: React.ReactNode;
 }) => {
   return (
-    <NextLink href={href} passHref>
+    <NextLink href={href} passHref rel="prefetch">
       <Text
         _hover={{
           textDecoration: "underline",
@@ -51,7 +51,7 @@ const Header = () => {
           <Stack direction="row" spacing={4}>
             <NavLink href="/">Home</NavLink>
             <NavLink href="/swagger">API Docs</NavLink>
-            <NavLink href="#roadmap">Roadmap</NavLink>
+            <NavLink href="/#roadmap">Roadmap</NavLink>
             <NavLink href="/pricing">Pricing</NavLink>
           </Stack>
         </Flex>
@@ -74,7 +74,7 @@ const Header = () => {
           <Stack as="nav" spacing={4}>
             <NavLink href="/">Home</NavLink>
             <NavLink href="/swagger">API Docs</NavLink>
-            <NavLink href="#roadmap">Roadmap</NavLink>
+            <NavLink href="/#roadmap">Roadmap</NavLink>
             <NavLink href="/pricing">Pricing</NavLink>
           </Stack>
         </Box>

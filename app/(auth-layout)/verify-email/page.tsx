@@ -4,6 +4,7 @@ import VerifyEmailForm from "./VerifyEmailForm";
 import { checkUserSession } from "../../utils/checkUserSession";
 
 import { redirect } from "next/navigation";
+import Loading from "../../loading";
 
 interface VerifyEmailPageProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -53,7 +54,7 @@ export default async function VerifyEmail({
         </Text>
 
         {/* Use Suspense to handle loading state */}
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loading />}>
           <VerifyEmailForm
             redirectUrl={redirectUrl}
             email={email}

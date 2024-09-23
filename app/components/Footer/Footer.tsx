@@ -18,7 +18,7 @@ const Footer = () => {
           <Link href="/swagger" mx={2} fontSize="sm" fontWeight="medium">
             API Docs
           </Link>
-          <Link href="#roadmap" mx={2} fontSize="sm" fontWeight="medium">
+          <Link href="/#roadmap" mx={2} fontSize="sm" fontWeight="medium">
             Roadmap
           </Link>
           <Link href="/pricing" mx={2} fontSize="sm" fontWeight="medium">
