@@ -5,5 +5,5 @@ export default authkitMiddleware();
 // Match against pages that require auth
 // Leave this out if you want auth on every resource (including images, css etc.)
 export const config = {
-  matcher: ["/pricing", "/subscribe", "/signIn", "/signUp", "/verify-email"],
+  matcher: ["/pricing", "/subscribe", "/signin", "/signup", "/verify-email"],
 };

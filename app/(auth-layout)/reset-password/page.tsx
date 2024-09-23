@@ -67,7 +67,7 @@ export default function ResetPassword({
       setResetPasswordState({ error: result.error });
     } else {
       setResetPasswordState({ success: true, error: null });
-      router.push("/signIn"); // Redirect to signIn page on successful password reset
+      router.push("/signin"); // Redirect to signIn page on successful password reset
     }
   };
 

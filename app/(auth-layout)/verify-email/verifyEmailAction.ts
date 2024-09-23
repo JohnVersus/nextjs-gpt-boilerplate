@@ -1,21 +1,12 @@
 "use server";
 
-// These are Next.js server actions.
-//
-// If your application is a single page app (SPA) with a separate backend you will need to:
-// - create a backend endpoint to handle each request
-// - adapt the code below in each of those endpoints
-//
-// Please also note that for the sake of simplicity, we return all errors here.
-// In a real application, you should pay attention to which errors make it
-// to the client for security reasons.
-
 import { WorkOS } from "@workos-inc/node";
 import { cookies, headers } from "next/headers";
 import { env } from "../../../env";
 
 const workos = new WorkOS(env.WORKOS_API_KEY);
-function IP() {
+
+function getIP() {
   const FALLBACK_IP_ADDRESS = "0.0.0.0";
   const forwardedFor = headers().get("x-forwarded-for");
 
@@ -25,37 +16,47 @@ function IP() {
 
   return headers().get("x-real-ip") ?? FALLBACK_IP_ADDRESS;
 }
-export async function sendCode(prevState: any, formData: FormData) {
+
+export async function sendCodeAction(email: string) {
   try {
     const users = await workos.userManagement.listUsers({
-      email: String(formData.get("email")),
+      email: email,
     });
     const user = users.data[0];
-    return await workos.userManagement.sendVerificationEmail({
+
+    if (!user) {
+      throw new Error("User not found.");
+    }
+
+    await workos.userManagement.sendVerificationEmail({
       userId: user.id,
     });
-  } catch (error) {
-    return { error: JSON.parse(JSON.stringify(error)) };
+    return { success: true };
+  } catch (error: any) {
+    throw new Error(
+      error.message || "An error occurred while sending the code."
+    );
   }
 }
 
-export async function verifyEmail(prevState: any, formData: FormData) {
+export async function verifyEmailAction(formData: FormData) {
   try {
     const response =
       await workos.userManagement.authenticateWithEmailVerification({
-        clientId: env.WORKOS_CLIENT_ID as string,
+        clientId: env.WORKOS_CLIENT_ID || "",
         code: String(formData.get("code")),
         session: {
           sealSession: true,
-          cookiePassword: process.env.WORKOS_COOKIE_PASSWORD,
+          cookiePassword: env.WORKOS_COOKIE_PASSWORD,
         },
         pendingAuthenticationToken: String(
           formData.get("pendingAuthenticationToken")
         ),
-        ipAddress: IP(),
-        userAgent: headers().get("User-Agent") || "",
+        ipAddress: getIP(),
+        userAgent: headers().get("user-agent") || "",
       });
-    const { user, sealedSession } = response;
+
+    const { sealedSession } = response;
 
     if (sealedSession) {
       // Store the session in a cookie using Next.js cookies API
@@ -64,12 +65,15 @@ export async function verifyEmail(prevState: any, formData: FormData) {
         httpOnly: true,
         secure: true,
         sameSite: "lax",
+        maxAge: 7 * 24 * 60 * 60,
       });
     }
 
-    return { user };
-  } catch (error) {
+    // Return success
+    return { success: true };
+  } catch (error: any) {
+    // Delete the session cookie
     cookies().delete("wos-session");
-    return { error: JSON.parse(JSON.stringify(error)) };
+    throw new Error(error.message || "An error occurred during verification.");
   }
 }

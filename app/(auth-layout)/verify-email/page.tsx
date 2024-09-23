@@ -1,68 +1,32 @@
-"use client";
-
-import {
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  Heading,
-  VStack,
-  Text,
-  Flex,
-} from "@chakra-ui/react";
-import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { verifyEmail } from "./verify-email";
+import { Box, Heading, Text, Flex } from "@chakra-ui/react";
+import { Suspense } from "react";
+import VerifyEmailForm from "./VerifyEmailForm";
 import { checkUserSession } from "../../utils/checkUserSession";
 
-type APIError = {
-  status: number;
-  name: string;
-  message: string;
-  requestID: string;
-  code: string;
-  errors: { code: string; message: string }[];
-};
+import { redirect } from "next/navigation";
+import Loading from "../../loading";
 
-type VerifyEmailState = {
-  error?: APIError | null;
-  user?: any;
-};
+interface VerifyEmailPageProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
 
-export default function VerifyEmail() {
-  const [verifyEmailState, setVerifyEmailState] = useState<VerifyEmailState>({
-    error: null,
-  });
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirectUrl = searchParams.get("redirect") || "/";
-  const email = searchParams.get("email");
-  const pendingAuthenticationToken = searchParams.get("token");
+export default async function VerifyEmail({
+  searchParams,
+}: VerifyEmailPageProps) {
+  const redirectUrl =
+    typeof searchParams.redirect === "string" ? searchParams.redirect : "/";
+  const email =
+    typeof searchParams.email === "string" ? searchParams.email : "";
+  const pendingAuthenticationToken =
+    typeof searchParams.token === "string" ? searchParams.token : "";
 
-  const handleVerifyEmail = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    formData.append(
-      "pendingAuthenticationToken",
-      pendingAuthenticationToken || ""
-    );
+  // Redirect to sign-in page if required parameters are missing
+  if (!email || !pendingAuthenticationToken) {
+    redirect(`/signin?redirect=${encodeURIComponent(redirectUrl)}`);
+  }
 
-    const result = await verifyEmail(null, formData);
-    if ("error" in result) {
-      setVerifyEmailState({ error: result.error });
-    } else {
-      setVerifyEmailState({ user: result.user, error: null });
-      router.push(redirectUrl); // Redirect to the specified URL or root on successful verification
-    }
-  };
-
-  const getErrorMessage = (error: APIError) => {
-    if (error.errors && error.errors.length > 0) {
-      return error.errors.map((err) => err.message).join(", ");
-    }
-    return error.message || "Error in sending the verification code.";
-  };
+  // Server-side session check
+  await checkUserSession(redirectUrl);
 
   return (
     <Flex
@@ -73,7 +37,7 @@ export default function VerifyEmail() {
       textAlign="left"
       align="center"
       justify="center"
-      height="80vh"
+      height="90vh"
       gap={8}
       direction={{ base: "column", md: "row" }}
     >
@@ -89,44 +53,14 @@ export default function VerifyEmail() {
           Email: {email}
         </Text>
 
-        <form onSubmit={handleVerifyEmail}>
-          <VStack spacing="4">
-            <FormControl id="code" isRequired>
-              <FormLabel>Enter code from the email</FormLabel>
-              <Input
-                type="text"
-                name="code"
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                pattern="^\d{6}$"
-                maxLength={6}
-                minLength={6}
-                autoFocus
-              />
-            </FormControl>
-
-            <Input
-              type="hidden"
-              name="pendingAuthenticationToken"
-              value={pendingAuthenticationToken || ""}
-            />
-
-            <Button
-              type="submit"
-              background={"bgPrimary"}
-              variant="outline"
-              width="full"
-            >
-              Continue
-            </Button>
-          </VStack>
-        </form>
-
-        {verifyEmailState.error && (
-          <Text color="red.500" mt="4">
-            {getErrorMessage(verifyEmailState.error)}
-          </Text>
-        )}
+        {/* Use Suspense to handle loading state */}
+        <Suspense fallback={<Loading />}>
+          <VerifyEmailForm
+            redirectUrl={redirectUrl}
+            email={email}
+            pendingAuthenticationToken={pendingAuthenticationToken}
+          />
+        </Suspense>
       </Box>
     </Flex>
   );

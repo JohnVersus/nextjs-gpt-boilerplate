@@ -1,5 +1,13 @@
-import { Box, Heading, Text, Button, Flex, Link } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Text,
+  Button,
+  Flex,
+  Link as ChakraLink,
+} from "@chakra-ui/react";
 import Image from "next/image";
+import NextLink from "next/link";
 
 const Hero = () => {
   return (
@@ -29,14 +37,15 @@ const Hero = () => {
           This boilerplate provides a base template for building your next
           GPT-powered application.
         </Text>
-        <Link
+        <ChakraLink
+          as={NextLink}
           href="https://github.com/JohnVersus/nextjs-gpt-boilerplate"
           isExternal
         >
           <Button background={"bgPrimary"} variant="outline">
             Get Started
           </Button>
-        </Link>
+        </ChakraLink>
       </Box>
       <Box
         display={{ base: "none", md: "block" }}

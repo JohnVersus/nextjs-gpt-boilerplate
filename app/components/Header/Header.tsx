@@ -20,7 +20,7 @@ const NavLink = ({
   children: React.ReactNode;
 }) => {
   return (
-    <NextLink href={href} passHref>
+    <NextLink href={href} passHref rel="prefetch">
       <Text
         _hover={{
           textDecoration: "underline",
@@ -41,15 +41,17 @@ const Header = () => {
       <Flex maxW="7xl" mx="auto" px={4} align="center" justify="space-between">
         <Flex align="center">
           <Image src="/icon.svg" alt="Logo" boxSize="24px" mr={2} />
-          <Text fontSize="lg" fontWeight="bold">
-            GPT Boilerplate
-          </Text>
+          <NextLink href="/">
+            <Text fontSize="lg" fontWeight="bold" textDecoration={"none"}>
+              GPT Boilerplate
+            </Text>
+          </NextLink>
         </Flex>
         <Flex display={{ base: "none", md: "flex" }}>
           <Stack direction="row" spacing={4}>
             <NavLink href="/">Home</NavLink>
             <NavLink href="/swagger">API Docs</NavLink>
-            <NavLink href="#roadmap">Roadmap</NavLink>
+            <NavLink href="/#roadmap">Roadmap</NavLink>
             <NavLink href="/pricing">Pricing</NavLink>
           </Stack>
         </Flex>
@@ -72,7 +74,7 @@ const Header = () => {
           <Stack as="nav" spacing={4}>
             <NavLink href="/">Home</NavLink>
             <NavLink href="/swagger">API Docs</NavLink>
-            <NavLink href="#roadmap">Roadmap</NavLink>
+            <NavLink href="/#roadmap">Roadmap</NavLink>
             <NavLink href="/pricing">Pricing</NavLink>
           </Stack>
         </Box>
