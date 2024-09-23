@@ -56,6 +56,7 @@ export async function signUpAction(formData: FormData, redirectUrl: string) {
       httpOnly: true,
       secure: true,
       sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60,
     });
   }
 

@@ -65,6 +65,7 @@ export async function verifyEmailAction(formData: FormData) {
         httpOnly: true,
         secure: true,
         sameSite: "lax",
+        maxAge: 7 * 24 * 60 * 60,
       });
     }
 
