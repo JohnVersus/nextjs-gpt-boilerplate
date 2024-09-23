@@ -1,5 +1,5 @@
 import { Box, Heading, Flex, Text, Link as ChakraLink } from "@chakra-ui/react";
-import SignUpForm from "./SignUpForm";
+import SignUpForm from "../signup/SignUpForm";
 import { Suspense } from "react";
 import { checkUserSession } from "../../utils/checkUserSession";
 import NextLink from "next/link";
