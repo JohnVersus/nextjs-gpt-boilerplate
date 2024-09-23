@@ -13,6 +13,8 @@ import {
   Tr,
   Th,
   Td,
+  TableContainer,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { PaymentButton } from "./PaymentButton";
 import { PaymentSelectModel } from "../models/payment";
@@ -55,6 +57,8 @@ export default function PricingClientPage({
     dateStyle: "short",
     timeStyle: "short",
   });
+
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   return (
     <>
@@ -202,49 +206,51 @@ export default function PricingClientPage({
               Transaction History
             </Heading>
             {userPayments.length > 0 ? (
-              <Table variant="simple">
-                <Thead>
-                  <Tr>
-                    <Th>Plan</Th>
-                    <Th>Amount</Th>
-                    <Th>Status</Th>
-                    <Th>Date</Th>
-                    <Th>Action</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {userPayments.map((payment: PaymentSelectModel) => (
-                    <Tr key={payment.orderId}>
-                      <Td>{payment.plan}</Td>
-                      <Td>₹{payment.amount}</Td>
-                      <Td textTransform="capitalize">{payment.status}</Td>
-                      <Td>
-                        {dateFormatter.format(new Date(payment.createdAt))}
-                      </Td>
-                      <Td>
-                        {["failed", "cancelled"].includes(payment.status) &&
-                        !hasPlan(payment.plan) &&
-                        payment.orderId ===
-                          lastFailedPayments[payment.plan]?.orderId ? (
-                          <PaymentButton
-                            plan={payment.plan}
-                            amount={payment.amount}
-                            user={{
-                              id: user?.id as string,
-                              firstName: user?.firstName as string,
-                              email: user?.email as string,
-                            }}
-                            orderId={payment.orderId} // Pass existing orderId for retry
-                            isRetry={true}
-                          />
-                        ) : (
-                          "-"
-                        )}
-                      </Td>
+              <TableContainer>
+                <Table variant="simple" size={isMobile ? "sm" : "md"}>
+                  <Thead>
+                    <Tr>
+                      <Th>Plan</Th>
+                      <Th>Amount</Th>
+                      <Th>Status</Th>
+                      <Th>Date</Th>
+                      <Th>Action</Th>
                     </Tr>
-                  ))}
-                </Tbody>
-              </Table>
+                  </Thead>
+                  <Tbody>
+                    {userPayments.map((payment: PaymentSelectModel) => (
+                      <Tr key={payment.orderId}>
+                        <Td>{payment.plan}</Td>
+                        <Td>₹{payment.amount}</Td>
+                        <Td textTransform="capitalize">{payment.status}</Td>
+                        <Td>
+                          {dateFormatter.format(new Date(payment.createdAt))}
+                        </Td>
+                        <Td>
+                          {["failed", "cancelled"].includes(payment.status) &&
+                          !hasPlan(payment.plan) &&
+                          payment.orderId ===
+                            lastFailedPayments[payment.plan]?.orderId ? (
+                            <PaymentButton
+                              plan={payment.plan}
+                              amount={payment.amount}
+                              user={{
+                                id: user?.id as string,
+                                firstName: user?.firstName as string,
+                                email: user?.email as string,
+                              }}
+                              orderId={payment.orderId}
+                              isRetry={true}
+                            />
+                          ) : (
+                            "-"
+                          )}
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </TableContainer>
             ) : (
               <Text>No transactions found.</Text>
             )}
