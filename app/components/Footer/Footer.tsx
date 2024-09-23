@@ -1,4 +1,5 @@
-import { Box, Flex, Text, Link } from "@chakra-ui/react";
+import { Box, Flex, Text, Link as ChakraLink } from "@chakra-ui/react";
+import NextLink from "next/link";
 
 const Footer = () => {
   return (
@@ -12,37 +13,69 @@ const Footer = () => {
           © 2024 GPT Boilerplate
         </Text>
         <Flex mt={{ base: 2, md: 0 }} justify={{ base: "center", md: "end" }}>
-          <Link href="/" mx={2} fontSize="sm" fontWeight="medium">
+          <ChakraLink
+            as={NextLink}
+            href="/"
+            mx={2}
+            fontSize="sm"
+            fontWeight="medium"
+          >
             Home
-          </Link>
-          <Link href="/swagger" mx={2} fontSize="sm" fontWeight="medium">
+          </ChakraLink>
+          <ChakraLink
+            as={NextLink}
+            href="/swagger"
+            mx={2}
+            fontSize="sm"
+            fontWeight="medium"
+          >
             API Docs
-          </Link>
-          <Link href="/#roadmap" mx={2} fontSize="sm" fontWeight="medium">
+          </ChakraLink>
+          <ChakraLink
+            as={NextLink}
+            href="/#roadmap"
+            mx={2}
+            fontSize="sm"
+            fontWeight="medium"
+          >
             Roadmap
-          </Link>
-          <Link href="/pricing" mx={2} fontSize="sm" fontWeight="medium">
+          </ChakraLink>
+          <ChakraLink
+            as={NextLink}
+            href="/pricing"
+            mx={2}
+            fontSize="sm"
+            fontWeight="medium"
+          >
             Pricing
-          </Link>
-          <Link
+          </ChakraLink>
+          <ChakraLink
+            as={NextLink}
             href="/TermsAndConditions"
             mx={2}
             fontSize="sm"
             fontWeight="medium"
           >
             Terms and Conditions
-          </Link>
-          <Link
+          </ChakraLink>
+          <ChakraLink
+            as={NextLink}
             href="/CancellationAndRefundPolicy"
             mx={2}
             fontSize="sm"
             fontWeight="medium"
           >
             Cancellation and Refund Policy
-          </Link>
-          <Link href="/PrivacyPolicy" mx={2} fontSize="sm" fontWeight="medium">
+          </ChakraLink>
+          <ChakraLink
+            as={NextLink}
+            href="/PrivacyPolicy"
+            mx={2}
+            fontSize="sm"
+            fontWeight="medium"
+          >
             Privacy Policy
-          </Link>
+          </ChakraLink>
         </Flex>
       </Flex>
     </Box>

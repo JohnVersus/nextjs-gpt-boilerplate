@@ -4,8 +4,7 @@ import {
   Box,
   Heading,
   Text,
-  Flex,
-  Link,
+  Link as ChakraLink,
   Stack,
   Button,
   Table,
@@ -17,6 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { PaymentButton } from "./PaymentButton";
 import { PaymentSelectModel } from "../models/payment";
+import NextLink from "next/link";
 
 interface PricingClientPageProps {
   pathname: string;
@@ -121,11 +121,11 @@ export default function PricingClientPage({
                 />
               )
             ) : (
-              <Link href={signUpUrl}>
+              <ChakraLink as={NextLink} href={signUpUrl}>
                 <Button colorScheme="teal" width="full">
                   Authenticate to Buy
                 </Button>
-              </Link>
+              </ChakraLink>
             )}
           </Box>
         </Box>
@@ -178,11 +178,11 @@ export default function PricingClientPage({
                 />
               )
             ) : (
-              <Link href={signUpUrl}>
+              <ChakraLink as={NextLink} href={signUpUrl}>
                 <Button colorScheme="teal" width="full">
                   Authenticate to Buy
                 </Button>
-              </Link>
+              </ChakraLink>
             )}
           </Box>
         </Box>
