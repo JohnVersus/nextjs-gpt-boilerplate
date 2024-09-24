@@ -8,6 +8,7 @@ import {
   IconButton,
   useDisclosure,
   Collapse,
+  Link as ChakraLink,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
@@ -15,21 +16,25 @@ import NextLink from "next/link";
 const NavLink = ({
   href,
   children,
+  ...props
 }: {
   href: string;
   children: React.ReactNode;
+  [x: string]: any;
 }) => {
   return (
-    <NextLink href={href} passHref rel="prefetch">
-      <Text
-        _hover={{
-          textDecoration: "underline",
-          textUnderlineOffset: "6px",
-        }}
-      >
-        {children}
-      </Text>
-    </NextLink>
+    <ChakraLink
+      as={NextLink}
+      rel={"prefetch"}
+      href={href}
+      _hover={{
+        textDecoration: "underline",
+        textUnderlineOffset: "6px",
+      }}
+      {...props}
+    >
+      {children}
+    </ChakraLink>
   );
 };
 
@@ -41,16 +46,22 @@ const Header = () => {
       <Flex maxW="7xl" mx="auto" px={4} align="center" justify="space-between">
         <Flex align="center">
           <Image src="/icon.svg" alt="Logo" boxSize="24px" mr={2} />
-          <NextLink href="/">
-            <Text fontSize="lg" fontWeight="bold" textDecoration={"none"}>
+          <ChakraLink
+            as={NextLink}
+            href="/"
+            _hover={{ textDecoration: "none" }}
+          >
+            <Text fontSize="lg" fontWeight="bold" textDecoration="none">
               GPT Boilerplate
             </Text>
-          </NextLink>
+          </ChakraLink>
         </Flex>
         <Flex display={{ base: "none", md: "flex" }}>
           <Stack direction="row" spacing={4}>
             <NavLink href="/">Home</NavLink>
-            <NavLink href="/swagger">API Docs</NavLink>
+            <NavLink href="/swagger" target="_blank" rel="noopener noreferrer">
+              API Docs
+            </NavLink>
             <NavLink href="/#roadmap">Roadmap</NavLink>
             <NavLink href="/pricing">Pricing</NavLink>
           </Stack>
@@ -73,7 +84,9 @@ const Header = () => {
         <Box pb={4} display={{ md: "none" }} textAlign="right" pr={4}>
           <Stack as="nav" spacing={4}>
             <NavLink href="/">Home</NavLink>
-            <NavLink href="/swagger">API Docs</NavLink>
+            <NavLink href="/swagger" target="_blank" rel="noopener noreferrer">
+              API Docs
+            </NavLink>
             <NavLink href="/#roadmap">Roadmap</NavLink>
             <NavLink href="/pricing">Pricing</NavLink>
           </Stack>

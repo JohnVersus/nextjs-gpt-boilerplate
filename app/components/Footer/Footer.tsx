@@ -28,6 +28,8 @@ const Footer = () => {
             href="/swagger"
             fontSize="sm"
             fontWeight="medium"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             API Docs
           </ChakraLink>
@@ -52,6 +54,7 @@ const Footer = () => {
             href="/TermsAndConditions"
             fontSize="sm"
             fontWeight="medium"
+            rel="prefetch"
           >
             Terms and Conditions
           </ChakraLink>
