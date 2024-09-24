@@ -10,9 +10,10 @@ import {
   VStack,
   Text,
   Flex,
+  Spinner,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { sendReset, resetPassword } from "./reset-password";
 
 type APIError = {
@@ -42,10 +43,13 @@ export default function ResetPassword({
     useState<ResetPasswordState>({
       error: null,
     });
+  const [isLoadingSendReset, setIsLoadingSendReset] = useState(false);
+  const [isLoadingResetPassword, setIsLoadingResetPassword] = useState(false);
   const router = useRouter();
 
   const handleSendReset = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoadingSendReset(true);
     const formData = new FormData(event.currentTarget);
     const result = (await sendReset(null, formData)) as { error?: any } | void;
     if (result && "error" in result) {
@@ -53,12 +57,14 @@ export default function ResetPassword({
     } else {
       setSendResetState({ success: true, error: null });
     }
+    setIsLoadingSendReset(false);
   };
 
   const handleResetPassword = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
+    setIsLoadingResetPassword(true);
     const formData = new FormData(event.currentTarget);
     const result = (await resetPassword(null, formData)) as {
       error?: any;
@@ -69,6 +75,7 @@ export default function ResetPassword({
       setResetPasswordState({ success: true, error: null });
       router.push("/signin"); // Redirect to signIn page on successful password reset
     }
+    setIsLoadingResetPassword(false);
   };
 
   const getErrorMessage = (error: APIError) => {
@@ -115,6 +122,9 @@ export default function ResetPassword({
                 background={"bgPrimary"}
                 variant="outline"
                 width="full"
+                isLoading={isLoadingSendReset}
+                disabled={isLoadingSendReset}
+                spinner={<Spinner color="white" />}
               >
                 Send reset instructions
               </Button>
@@ -184,6 +194,9 @@ export default function ResetPassword({
               background={"bgPrimary"}
               variant="outline"
               width="full"
+              isLoading={isLoadingResetPassword}
+              disabled={isLoadingResetPassword}
+              spinner={<Spinner color="white" />}
             >
               Continue
             </Button>
