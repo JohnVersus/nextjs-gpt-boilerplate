@@ -6,7 +6,7 @@ import "../../styles/swagger.css";
 import { OpenAPIV1 } from "../api/swagger/swagger";
 
 const SwaggerPage = () => (
-  <SwaggerUI spec={OpenAPIV1} displayOperationId={true} />
+  <SwaggerUI spec={OpenAPIV1} displayOperationId={false} />
 );
 
 export default SwaggerPage;
