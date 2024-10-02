@@ -27,15 +27,28 @@ export default function SignUpForm({ redirectUrl }: SignUpFormProps) {
     setIsLoading(true);
     const formData = new FormData(event.currentTarget);
     try {
-      await signUpAction(formData, redirectUrl);
-      // If signUpAction doesn't redirect, you can manually redirect here
-      // router.push(redirectUrl);
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
+      const result = await signUpAction(formData, redirectUrl);
+
+      if (result.emailVerificationRequired) {
+        // Redirect to verify email page
+        router.push(
+          `/verify-email?redirect=${encodeURIComponent(
+            redirectUrl
+          )}&email=${encodeURIComponent(
+            result.email
+          )}&token=${encodeURIComponent(result.pendingAuthenticationToken)}`
+        );
+      } else if (result.success) {
+        // Successful sign-up
+        router.push(redirectUrl);
+      } else if (result.error) {
+        // Display the error message
+        setError(result.error);
       } else {
         setError("An unexpected error occurred.");
       }
+    } catch (err) {
+      setError("An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }

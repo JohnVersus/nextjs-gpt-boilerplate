@@ -39,10 +39,13 @@ export async function createRazorpayOrder(
 
     await db.insert(Payment).values(paymentData);
 
-    return order;
-  } catch (error) {
+    return { success: true, order };
+  } catch (error: any) {
     console.error("Razorpay order creation failed:", error);
-    throw new Error("Failed to create Razorpay order");
+    return {
+      success: false,
+      error: error.message || "Failed to create Razorpay order",
+    };
   }
 }
 
@@ -63,13 +66,15 @@ export async function updatePaymentStatus(
       .where(eq(Payment.orderId, orderId));
 
     console.log(`Payment status updated to ${status} for order ${orderId}`);
-  } catch (error) {
+    return { success: true };
+  } catch (error: any) {
     console.error("Failed to update payment status:", error);
-    throw error; // Re-throw the error to be caught in the calling function
+    return {
+      success: false,
+      error: error.message || "Failed to update payment status",
+    };
   }
 }
-
-// New function to check payment status
 
 export async function checkPaymentStatus(orderId: string) {
   try {
@@ -91,6 +96,7 @@ export async function checkPaymentStatus(orderId: string) {
         status = "pending"; // Other statuses can be mapped to 'pending' if appropriate
       }
       return {
+        success: true,
         status,
         paymentId: payment.id,
         paymentData: paymentData, // The full payment object
@@ -98,14 +104,17 @@ export async function checkPaymentStatus(orderId: string) {
     } else {
       // No payment attempts found for this order
       return {
+        success: true,
         status: "cancelled",
         paymentId: null,
         paymentData: null,
       };
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching payment status from Razorpay:", error);
     return {
+      success: false,
+      error: error.message || "Error fetching payment status from Razorpay",
       status: "cancelled",
       paymentId: null,
       paymentData: null,

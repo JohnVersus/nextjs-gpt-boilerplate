@@ -25,7 +25,8 @@ export async function sendCodeAction(email: string) {
     const user = users.data[0];
 
     if (!user) {
-      throw new Error("User not found.");
+      // Return error object instead of throwing
+      return { success: false, error: "User not found." };
     }
 
     await workos.userManagement.sendVerificationEmail({
@@ -33,9 +34,11 @@ export async function sendCodeAction(email: string) {
     });
     return { success: true };
   } catch (error: any) {
-    throw new Error(
-      error.message || "An error occurred while sending the code."
-    );
+    // Return error object instead of throwing
+    return {
+      success: false,
+      error: error.message || "An error occurred while sending the code.",
+    };
   }
 }
 
@@ -74,6 +77,10 @@ export async function verifyEmailAction(formData: FormData) {
   } catch (error: any) {
     // Delete the session cookie
     cookies().delete("wos-session");
-    throw new Error(error.message || "An error occurred during verification.");
+    // Return error object instead of throwing
+    return {
+      success: false,
+      error: error.message || "An error occurred during verification.",
+    };
   }
 }

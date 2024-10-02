@@ -13,29 +13,18 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { sendReset, resetPassword } from "./reset-password";
+import { useRouter, useSearchParams } from "next/navigation";
+import { sendReset, resetPassword } from "./resetPasswordAction";
 
-type APIError = {
-  status: number;
-  name: string;
-  message: string;
-  requestID: string;
-  code: string;
-  errors: { code: string; message: string }[];
-};
-
-type ResetPasswordState = {
-  error?: APIError | null;
+interface ResetPasswordState {
+  error?: string | null;
   success?: boolean;
-};
+}
 
-export default function ResetPassword({
-  searchParams,
-}: {
-  searchParams: { token?: string; email?: string };
-}) {
-  const { token, email } = searchParams;
+export default function ResetPassword() {
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token") || "";
+  const email = searchParams.get("email") || "";
   const [sendResetState, setSendResetState] = useState<ResetPasswordState>({
     error: null,
   });
@@ -51,13 +40,18 @@ export default function ResetPassword({
     event.preventDefault();
     setIsLoadingSendReset(true);
     const formData = new FormData(event.currentTarget);
-    const result = (await sendReset(null, formData)) as { error?: any } | void;
-    if (result && "error" in result) {
-      setSendResetState({ error: result.error });
-    } else {
-      setSendResetState({ success: true, error: null });
+    try {
+      const result = await sendReset(formData);
+      if (result.success) {
+        setSendResetState({ success: true, error: null });
+      } else {
+        setSendResetState({ error: result.error });
+      }
+    } catch {
+      setSendResetState({ error: "An unexpected error occurred." });
+    } finally {
+      setIsLoadingSendReset(false);
     }
-    setIsLoadingSendReset(false);
   };
 
   const handleResetPassword = async (
@@ -66,23 +60,19 @@ export default function ResetPassword({
     event.preventDefault();
     setIsLoadingResetPassword(true);
     const formData = new FormData(event.currentTarget);
-    const result = (await resetPassword(null, formData)) as {
-      error?: any;
-    } | void;
-    if (result && "error" in result) {
-      setResetPasswordState({ error: result.error });
-    } else {
-      setResetPasswordState({ success: true, error: null });
-      router.push("/signin"); // Redirect to signIn page on successful password reset
+    try {
+      const result = await resetPassword(formData);
+      if (result.success) {
+        setResetPasswordState({ success: true, error: null });
+        router.push("/signin"); // Redirect to sign-in page on successful password reset
+      } else {
+        setResetPasswordState({ error: result.error });
+      }
+    } catch {
+      setResetPasswordState({ error: "An unexpected error occurred." });
+    } finally {
+      setIsLoadingResetPassword(false);
     }
-    setIsLoadingResetPassword(false);
-  };
-
-  const getErrorMessage = (error: APIError) => {
-    if (error.errors && error.errors.length > 0) {
-      return error.errors.map((err) => err.message).join(", ");
-    }
-    return error.message;
   };
 
   if (!token) {
@@ -101,7 +91,7 @@ export default function ResetPassword({
       >
         <Box maxW="md">
           <Heading as="h1" size="2xl" mb={4}>
-            Reset password
+            Reset Password
           </Heading>
 
           <form onSubmit={handleSendReset}>
@@ -126,14 +116,14 @@ export default function ResetPassword({
                 disabled={isLoadingSendReset}
                 spinner={<Spinner color="white" />}
               >
-                Send reset instructions
+                Send Reset Instructions
               </Button>
             </VStack>
           </form>
 
           {sendResetState.error && (
             <Text color="red.500" mt="4">
-              {getErrorMessage(sendResetState.error)}
+              {sendResetState.error}
             </Text>
           )}
 
@@ -162,7 +152,7 @@ export default function ResetPassword({
     >
       <Box maxW="md">
         <Heading as="h1" size="2xl" mb={4}>
-          Reset password
+          Reset Password
         </Heading>
 
         <form onSubmit={handleResetPassword}>
@@ -205,13 +195,13 @@ export default function ResetPassword({
 
         {resetPasswordState.error && (
           <Text color="red.500" mt="4">
-            {getErrorMessage(resetPasswordState.error)}
+            {resetPasswordState.error}
           </Text>
         )}
 
         {resetPasswordState.success && (
           <Text color="green.500" mt="4">
-            Password reset successfully. Redirecting to signIn page...
+            Password reset successfully. Redirecting to sign-in page...
           </Text>
         )}
       </Box>
