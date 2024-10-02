@@ -35,8 +35,10 @@ export async function signInAction(formData: FormData) {
         pendingAuthenticationToken: pendingAuthToken,
       };
     } else {
-      // Throw an error to be caught in the client component
-      throw new Error(error.message || "An error occurred during sign-in.");
+      return {
+        success: false,
+        error: error.message || "An error occurred during sign-in.",
+      };
     }
   }
 

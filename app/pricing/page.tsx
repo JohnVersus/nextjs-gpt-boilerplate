@@ -36,9 +36,9 @@ export default async function PricingPage() {
         .where(eq(Payment.userId, user.id))
         .orderBy(desc(Payment.createdAt));
     } catch (error) {
-      console.error("Error fetching user payments:", error);
+      console.error("Error fetching past user payments:", error);
       errorMessage =
-        "Error fetching user payments. Please refresh the page or try again later.";
+        "Error fetching past user payments. Please refresh the page or try again later.";
     }
 
     if (!errorMessage) {

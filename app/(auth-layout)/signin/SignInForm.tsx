@@ -41,15 +41,13 @@ export default function SignInForm({ redirectUrl }: SignInFormProps) {
       } else if (result.success) {
         // Successful sign-in
         router.push(redirectUrl);
+      } else if (result.error) {
+        setError(result.error);
       } else {
         setError("An unexpected error occurred.");
       }
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An unexpected error occurred.");
-      }
+      setError("An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }
