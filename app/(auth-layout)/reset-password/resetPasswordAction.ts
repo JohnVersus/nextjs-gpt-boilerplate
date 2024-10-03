@@ -8,11 +8,8 @@ const workos = new WorkOS(env.WORKOS_API_KEY);
 export async function sendReset(formData: FormData) {
   try {
     const email = String(formData.get("email"));
-    await workos.userManagement.sendPasswordResetEmail({
+    await workos.userManagement.createPasswordReset({
       email,
-      passwordResetUrl: `http://localhost:3000/reset-password?email=${encodeURIComponent(
-        email
-      )}`,
     });
     return { success: true };
   } catch (error: any) {

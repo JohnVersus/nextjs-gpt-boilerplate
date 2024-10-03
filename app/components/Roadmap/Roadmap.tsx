@@ -51,14 +51,13 @@ const items = [
   //   linkText: "",
   //   linkHref: "",
   // },
-  // {
-  //   title: "Auth & Billing",
-  //   description:
-  //     "Enable user registration for access to pro features and billing.",
-  //   status: "Coming Soon",
-  //   linkText: "",
-  //   linkHref: "",
-  // },
+  {
+    title: "Auth & Billing",
+    description: "Prcing page has been setup with link user authentication.",
+    status: "",
+    linkText: "Visit Pricing Page",
+    linkHref: "/pricing",
+  },
 ];
 
 const Roadmap = () => {

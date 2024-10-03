@@ -85,7 +85,7 @@ export default function ResetPassword() {
         textAlign="left"
         align="center"
         justify="center"
-        height="80vh"
+        height="90vh"
         gap={8}
         direction={{ base: "column", md: "row" }}
       >

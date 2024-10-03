@@ -8,10 +8,13 @@ import {
   VStack,
   Text,
   Spinner,
+  Link as ChakraLink,
+  Flex,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signInAction } from "./signInAction";
+import NextLink from "next/link";
 
 interface SignInFormProps {
   redirectUrl: string;
@@ -42,6 +45,7 @@ export default function SignInForm({ redirectUrl }: SignInFormProps) {
         // Successful sign-in
         router.push(redirectUrl);
       } else if (result.error) {
+        // Display the error message
         setError(result.error);
       } else {
         setError("An unexpected error occurred.");
@@ -56,7 +60,7 @@ export default function SignInForm({ redirectUrl }: SignInFormProps) {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <VStack spacing="4">
+        <VStack spacing="4" align="stretch">
           <FormControl id="email" isRequired>
             <FormLabel>Email</FormLabel>
             <Input
@@ -97,6 +101,27 @@ export default function SignInForm({ redirectUrl }: SignInFormProps) {
           {error}
         </Text>
       )}
+
+      <Text mt="4">
+        Don’t have an account?{" "}
+        <ChakraLink
+          as={NextLink}
+          href={`/signup?redirect=${redirectUrl}`}
+          color="blue.500"
+        >
+          Sign up
+        </ChakraLink>
+      </Text>
+      <Flex justify="flex-start">
+        <ChakraLink
+          as={NextLink}
+          href={`/reset-password`}
+          color="gray.600"
+          fontSize="sm"
+        >
+          Forgot your password?
+        </ChakraLink>
+      </Flex>
     </>
   );
 }
