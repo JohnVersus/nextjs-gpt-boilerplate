@@ -4,10 +4,38 @@ import { Suspense } from "react";
 import { checkUserSession } from "../../utils/checkUserSession";
 import NextLink from "next/link";
 import Loading from "../../loading";
+import { Metadata } from "next";
 
 interface SignUpPageProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
+
+export const metadata: Metadata = {
+  title: "Sign Up - NextJs GPT Boilerplate",
+  description: "Create your account and start using the GPT Boilerplate app.",
+  openGraph: {
+    title: "Sign Up - NextJs GPT Boilerplate",
+    description:
+      "Create your account and start using the GPT-powered application.",
+    images: [
+      {
+        url: "/favicon.png",
+        width: 800,
+        height: 600,
+        alt: "Sign Up Thumbnail",
+      },
+    ],
+    url: "https://nextjs-gpt-boilerplate.vercel.app/signup",
+    siteName: "NextJs GPT Boilerplate",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sign Up - NextJs GPT Boilerplate",
+    description:
+      "Create your account and start using the GPT-powered application.",
+    images: ["https://nextjs-gpt-boilerplate.vercel.app/signup-image.png"],
+  },
+};
 
 export default async function SignUpWithEmailPassword({
   searchParams,

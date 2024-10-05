@@ -43,20 +43,20 @@ const items = [
     linkHref: "/swagger",
     status: "",
   },
-  // {
-  //   title: "Testing Suite",
-  //   description:
-  //     "Integrated testing chatBot for easy evaluation of GPT API endpoints.",
-  //   status: "Coming Soon",
-  //   linkText: "",
-  //   linkHref: "",
-  // },
   {
     title: "Auth & Billing",
     description: "Prcing page has been setup with link user authentication.",
     status: "",
     linkText: "Visit Pricing Page",
     linkHref: "/pricing",
+  },
+  {
+    title: "Testing Suite",
+    description:
+      "Integrated testing chatBot for easy evaluation of GPT API endpoints.",
+    status: "Coming Soon",
+    linkText: "",
+    linkHref: "",
   },
 ];
 

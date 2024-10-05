@@ -58,7 +58,7 @@ const Hero = () => {
         <Flex align="center" justify="center" height={"100%"}>
           <Image
             src="/image1.png"
-            alt="GPT Boilerplate"
+            alt="NextJs GPT Boilerplate"
             width={350}
             height={350}
           />
