@@ -38,15 +38,19 @@ export default function VerifyEmailForm({
       pendingAuthenticationToken || ""
     );
     try {
-      await verifyEmailAction(formData);
-      // Redirect after successful verification
-      router.push(redirectUrl);
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
+      const result = await verifyEmailAction(formData);
+
+      if (result.success) {
+        // Redirect after successful verification
+        router.push(redirectUrl);
+      } else if (result.error) {
+        // Display the error message
+        setError(result.error);
       } else {
         setError("An unexpected error occurred.");
       }
+    } catch {
+      setError("An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }
@@ -57,16 +61,20 @@ export default function VerifyEmailForm({
     setError(null);
     setCodeSentMessage(null);
     try {
-      await sendCodeAction(email);
-      setCodeSentMessage(
-        "A new verification code has been sent to your email."
-      );
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
+      const result = await sendCodeAction(email);
+
+      if (result.success) {
+        setCodeSentMessage(
+          "A new verification code has been sent to your email."
+        );
+      } else if (result.error) {
+        // Display the error message
+        setError(result.error);
       } else {
         setError("An unexpected error occurred while sending the code.");
       }
+    } catch {
+      setError("An unexpected error occurred while sending the code.");
     } finally {
       setIsLoading(false);
     }

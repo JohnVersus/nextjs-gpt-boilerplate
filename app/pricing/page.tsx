@@ -7,6 +7,35 @@ import { Payment, PaymentSelectModel } from "../models/payment";
 import { eq, desc } from "drizzle-orm";
 import PricingClientPage from "./PricingClientPage";
 import Loading from "../loading";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Pricing - NextJs GPT Boilerplate",
+  description:
+    "Explore our pricing plans and choose the one that best fits your needs.",
+  openGraph: {
+    title: "Pricing - NextJs GPT Boilerplate",
+    description:
+      "Explore our flexible pricing plans for the GPT-powered application.",
+    images: [
+      {
+        url: "/favicon.png",
+        width: 800,
+        height: 600,
+        alt: "Pricing Thumbnail",
+      },
+    ],
+    url: "https://nextjs-gpt-boilerplate.vercel.app/pricing",
+    siteName: "NextJs GPT Boilerplate",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Pricing - NextJs GPT Boilerplate",
+    description:
+      "Explore our flexible pricing plans for the GPT-powered application.",
+    images: ["https://nextjs-gpt-boilerplate.vercel.app/image1.png"],
+  },
+};
 
 export default async function PricingPage() {
   const pathname = "/pricing";

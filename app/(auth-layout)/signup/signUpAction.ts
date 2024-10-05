@@ -3,7 +3,6 @@
 import { WorkOS } from "@workos-inc/node";
 import { env } from "../../../env";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 const workos = new WorkOS(env.WORKOS_API_KEY);
 
@@ -17,8 +16,11 @@ export async function signUpAction(formData: FormData, redirectUrl: string) {
       lastName: String(formData.get("lastName")),
     });
   } catch (error: any) {
-    // Handle user creation errors
-    throw new Error(error.message || "An error occurred during sign-up.");
+    // Return error object instead of throwing
+    return {
+      success: false,
+      error: error.message || "An error occurred during sign-up.",
+    };
   }
 
   // After successful sign-up, attempt to sign in
@@ -38,17 +40,23 @@ export async function signUpAction(formData: FormData, redirectUrl: string) {
     // Handle specific errors like email verification required
     if (error.rawData && error.rawData.code === "email_verification_required") {
       const pendingAuthToken = error.rawData.pending_authentication_token;
-      redirect(
-        `/verify-email?redirect=${redirectUrl}&email=${encodeURIComponent(
-          String(formData.get("email"))
-        )}&token=${pendingAuthToken}`
-      );
+      const email = String(formData.get("email"));
+      // Return an object indicating that email verification is required
+      return {
+        emailVerificationRequired: true,
+        email,
+        pendingAuthenticationToken: pendingAuthToken,
+      };
     } else {
-      throw new Error(error.message || "An error occurred during sign-in.");
+      // Return error object instead of throwing
+      return {
+        success: false,
+        error: error.message || "An error occurred during sign-in.",
+      };
     }
   }
 
-  const { user: authenticatedUser, sealedSession } = authResponse;
+  const { sealedSession } = authResponse;
   if (sealedSession) {
     // Store the session in a cookie using Next.js cookies API
     cookies().set("wos-session", sealedSession, {
@@ -60,6 +68,6 @@ export async function signUpAction(formData: FormData, redirectUrl: string) {
     });
   }
 
-  // Redirect to the specified URL (outside the try/catch block)
-  redirect(redirectUrl);
+  // Return success status and redirect URL
+  return { success: true };
 }

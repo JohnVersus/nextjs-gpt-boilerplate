@@ -6,14 +6,14 @@ import { Footer, Header } from "./components";
 import Script from "next/script";
 
 export const metadata: Metadata = {
-  title: "GPT Boilerplate - Jumpstart your GPT project",
+  title: "NextJs GPT Boilerplate - Jumpstart your GPT project",
   description:
     "A boilerplate to quickly start your GPT-powered application with Next.js",
   icons: {
     icon: "/favicon.png",
   },
   openGraph: {
-    title: "GPT Boilerplate - Jumpstart your GPT project",
+    title: "NextJs GPT Boilerplate - Jumpstart your GPT project",
     description:
       "A boilerplate to quickly start your GPT-powered application with Next.js",
     images: [
@@ -21,15 +21,15 @@ export const metadata: Metadata = {
         url: "https://nextjs-gpt-boilerplate.vercel.app/image1.png",
         width: 800,
         height: 600,
-        alt: "GPT Boilerplate Thumbnail",
+        alt: "NextJs GPT Boilerplate Thumbnail",
       },
     ],
     url: "https://nextjs-gpt-boilerplate.vercel.app/",
-    siteName: "GPT Boilerplate",
+    siteName: "NextJs GPT Boilerplate",
   },
   twitter: {
     card: "summary_large_image",
-    title: "GPT Boilerplate - Jumpstart your GPT project",
+    title: "NextJs GPT Boilerplate - Jumpstart your GPT project",
     description:
       "A boilerplate to quickly start your GPT-powered application with Next.js",
     images: ["https://nextjs-gpt-boilerplate.vercel.app/image1.png"],

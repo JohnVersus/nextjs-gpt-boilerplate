@@ -40,17 +40,6 @@ export default async function SignInWithEmailPassword({
         <Suspense fallback={<Loading />}>
           <SignInForm redirectUrl={redirectUrl} />
         </Suspense>
-
-        <Text mt="4">
-          Don’t have an account?{" "}
-          <ChakraLink
-            as={NextLink}
-            href={`/signup?redirect=${redirectUrl}`}
-            color="blue.500"
-          >
-            Sign up
-          </ChakraLink>
-        </Text>
       </Box>
     </Flex>
   );
