@@ -100,7 +100,6 @@ export function PaymentButton({
             }
           },
           prefill: {
-            name: user.firstName,
             email: user.email,
           },
           modal: {
