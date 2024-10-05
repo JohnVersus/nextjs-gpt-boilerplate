@@ -1,303 +1,97 @@
 # Next.js GPT Boilerplate
 
-This boilerplate provides a solid foundation for building your next GPT-powered application using Next.js.
+This boilerplate provides a solid foundation for building GPT-powered applications using Next.js, with API documentation, authentication, and payments all pre-configured.
+
+## Features
+
+- **API Documentation Generation**: Automatically generates API docs based on the standard folder structure when endpoints are defined. You can find examples and structure inside the `api` folder.
+- **Authentication**: Includes a custom Work OS Auth Kit layouts.
+- **Payments Integration**: Configured with Razorpay for handling payments, with payment data lifecycle managed using **Drizzle ORM** in a SQL database.
+- **UI Components**: Pre-built UI components using **Chakra UI** for a seamless and responsive user interface.
+- **Database ORM**: Uses **Drizzle ORM** for managing database interactions with defined schemas.
 
 ## Getting Started
 
-### Clone the Repository
-
-To get started, first clone the repository:
+### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/JohnVersus/nextjs-gpt-boilerplate.git
+git clone https://github.com/YourUsername/nextjs-gpt-boilerplate.git
 cd nextjs-gpt-boilerplate
 ```
 
-### Install Dependencies
+### 2. Install Dependencies
 
-Make sure you have `pnpm` installed. If you don't have it installed, you can install it globally using `npm`:
+Ensure `pnpm` is installed. If not, install it globally:
 
 ```bash
 npm install -g pnpm
 ```
 
-Once `pnpm` is installed, run the following command to install the project dependencies:
+Install project dependencies:
 
 ```bash
 pnpm install
 ```
 
-### Add env variables
+### 3. Set Up Environment Variables
 
-Create .env.local file and add the required env variables
+Create a `.env.local` file and add your environment variables:
 
 ```bash
 API_KEY=test
 NODE_ENV=development
+SITE_URL=""
 
 DB_NAME=xxx
 DB_USER=xxx
 DB_PASSWORD=xxx
 DB_HOST=xxx
+
+WORKOS_CLIENT_ID="client_..." # retrieved from the WorkOS dashboard
+WORKOS_API_KEY="sk_test_..." # retrieved from the WorkOS dashboard
+WORKOS_REDIRECT_URI="http://localhost:3000/callback" # configured in the WorkOS dashboard
+WORKOS_COOKIE_PASSWORD="<your password>" # generate a secure password here
+
+RAZORPAY_KEY_ID= "xxx"
+RAZORPAY_KEY_SECRET: "xxx"
 ```
 
-### Setup DB
+### 4. Setup Database
 
-Run the following commands to setup db with the defined schema
+To generate the database schema and apply migrations:
 
 ```bash
 pnpm run db:generate
 pnpm run db:migrate
 ```
 
-### Running the Development Server
+### 5. Start the Development Server
 
-After that, you can start the development server:
+Run the development server:
 
 ```bash
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
-## API Folder Structure
+## API Endpoints
 
-The `api` folder is where you will define your API endpoints. It contains demo API endpoints related to a bookstore. These endpoints can be used to read, add, and delete books.
+The `api` folder defines your API endpoints. This boilerplate includes demo endpoints for a bookstore (add, delete, fetch books). Refer to the `api` folder for more details.
 
-### Skeleton Folder Structure
+## Authentication and Payments
 
-```
-app/api
-├── books
-│   ├── [id]
-│   │   └── route.ts
-│   ├── addBook
-│   │   └── route.ts
-│   ├── deleteBook
-│   │   └── [id]
-│   │       └── route.ts
-│   ├── booksContract.ts
-│   └── route.ts
-├── config
-│   └── db.ts
-├── middleware
-│   ├── index.ts
-│   ├── runMiddleware.ts
-│   ├── withAuth.ts
-│   └── withLogging.ts
-├── models
-│   ├── schemas
-│   │   ├── addedBookResponseSchema.ts
-│   │   ├── bookSchema.ts
-│   │   ├── errorResponseSchema.ts
-│   │   └── index.ts
-│   ├── book.ts
-│   └── schema.ts
-├── swagger
-│   ├── route.ts
-│   └── swagger.ts
-└── utils
-    ├── apiLogger.ts
-    ├── auth.ts
-    └── index.ts
-```
+- **Authentication**: Custom work OS authentication is set up under the `auth-layout` folder.
+- **Payments**: Razorpay is integrated for handling payments, and payment data is stored using Drizzle ORM in a SQL database.
 
-### Example Endpoint Code
+## UI Components
 
-#### books/route.ts
+Pre-built UI components are implemented using Chakra UI. You can customize them under the `components` folder, which includes:
 
-```typescript
-// app/api/books/route.ts
-
-import { NextRequest, NextResponse } from "next/server";
-import { Book, BookSelectModel } from "../models/book";
-import { db } from "../config/db";
-import { withAuth, withLogging } from "../middleware";
-
-async function getBooksHandler(req: NextRequest) {
-  const books: BookSelectModel[] = await db.select().from(Book).execute();
-  return NextResponse.json(books, { status: 200 });
-}
-
-// Endpoint is wrapped with middlewares
-export const GET = withLogging(withAuth(getBooksHandler));
-```
-
-### API Endpoint Contract
-
-Contracts are defined under each endpoint folder where the API method, input, and output schemas are specified.
-
-```typescript
-// app/api/books/booksContract.ts
-import { z } from "zod";
-import { initContract } from "@ts-rest/core";
-import { BookSchema, ErrorResponseSchema } from "../models/schemas";
-
-const contract = initContract();
-
-export const BooksContract = contract.router({
-  getAllBooks: {
-    method: "GET",
-    path: "/api/books",
-    responses: {
-      200: z.array(BookSchema),
-      400: ErrorResponseSchema,
-      500: ErrorResponseSchema,
-    },
-  },
-  // ...similarly other endpoints
-});
-```
-
-### Schemas
-
-Schemas for the endpoints are defined under the `models/schemas` folder. These are used for type checking and defining example schemas for Swagger documentation.
-
-```typescript
-// app/api/models/schemas/bookSchema.ts
-
-import { z } from "zod";
-
-// Define the Zod schema
-export const BookSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  author: z.string(),
-  publishedYear: z.number(),
-});
-
-// Define the OpenAPI schema with examples
-export const BookSchemaExample = {
-  type: "object",
-  properties: {
-    id: {
-      type: "string",
-      example: "123e4567-e89b-12d3-a456-426614174000",
-    },
-    title: {
-      type: "string",
-      example: "Example Book Title",
-    },
-    author: {
-      type: "string",
-      example: "John Doe",
-    },
-    publishedYear: {
-      type: "integer",
-      example: 2021,
-    },
-  },
-  required: ["id", "title", "author", "publishedYear"],
-};
-```
-
-### Middleware
-
-Middleware is defined in the `middleware` folder. An example middleware for API key verification is shown below.
-
-```typescript
-// app/api/middleware/withAuth.ts
-import { NextRequest, NextResponse } from "next/server";
-import { authenticate } from "../utils/auth";
-
-type Handler = (req: NextRequest) => Promise<NextResponse>;
-
-export function withAuth(handler: Handler): Handler {
-  return async (req: NextRequest) => {
-    const authResponse = authenticate(req);
-    if (authResponse) {
-      return authResponse;
-    }
-    return handler(req);
-  };
-}
-```
-
-### Database
-
-We are using MySQL database with Drizzle ORM. The database schemas are defined under the `models` folder.
-
-```typescript
-// app/api/models/book.ts
-
-import {
-  mysqlTable,
-  serial,
-  varchar,
-  int,
-  timestamp,
-} from "drizzle-orm/mysql-core";
-import { InferInsertModel, InferSelectModel } from "drizzle-orm";
-
-export const Book = mysqlTable("books", {
-  id: serial("id").primaryKey(),
-  title: varchar("title", { length: 255 }),
-  author: varchar("author", { length: 255 }),
-  publishedYear: int("published_year"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
-});
-
-export type BookInsertModel = InferInsertModel<typeof Book>;
-export type BookSelectModel = InferSelectModel<typeof Book>;
-```
-
-### Swagger Documentation
-
-Swagger definitions are added in the `swagger.ts` file, which uses the defined API routes and schemas to generate Swagger OpenAPI definitions.
-
-```typescript
-// app/api/swagger/swagger.ts
-
-import { generateOpenApi } from "@ts-rest/open-api";
-import { BooksContract } from "../books/booksContract";
-import {
-  BookSchemaExample,
-  ErrorResponseSchemaExample,
-  AddedBookResponseSchemaExample,
-} from "../models/schemas";
-
-const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
-export const OpenAPIV1 = generateOpenApi(
-  {
-    ...BooksContract,
-  },
-  {
-    info: {
-      title: "API Documentation",
-      version: "1.0.0",
-      description: "API documentation for the project",
-    },
-    servers: [
-      {
-        url: serverUrl,
-        description: serverUrl.includes("localhost")
-          ? "Dev API server"
-          : "Prod API Server",
-      },
-    ],
-    components: {
-      securitySchemes: {
-        ApiKeyAuth: {
-          type: "apiKey",
-          in: "header",
-          name: "x-api-key",
-        },
-      },
-      schemas: {
-        Book: BookSchemaExample,
-        AddedBookResponse: AddedBookResponseSchemaExample,
-        ErrorResponse: ErrorResponseSchemaExample,
-      },
-    },
-    security: [{ ApiKeyAuth: [] }],
-    externalDocs: {
-      description: "Swagger JSON",
-      url: "/api/swagger",
-    },
-  }
-);
-```
+- **Header**
+- **Footer**
+- **Hero**
+- **Roadmap**
 
 ## License
 
@@ -305,8 +99,6 @@ This project is licensed under the MIT License.
 
 ## Contributing
 
-Contributions are welcome! Please read the [contributing guidelines](CONTRIBUTING.md) for more information.
+Contributions are welcome! Feel free to open an issue or submit a pull request.
 
-## Contact
-
-If you have any questions or need further assistance, feel free to open an issue or contact the project maintainer.
+---
