@@ -15,7 +15,7 @@ This boilerplate provides a solid foundation for building GPT-powered applicatio
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/YourUsername/nextjs-gpt-boilerplate.git
+git clone https://github.com/JohnVersus/nextjs-gpt-boilerplate.git
 cd nextjs-gpt-boilerplate
 ```
 
