@@ -1,20 +1,20 @@
 "use client";
 
-import { Button, useToast } from "@chakra-ui/react";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 import {
   createRazorpayOrder,
   updatePaymentStatus,
   checkPaymentStatus,
 } from "./razorpay";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 type PaymentButtonProps = {
   plan: string;
   amount: number;
   user: { id: string; firstName: string; email: string };
-  orderId?: string; // Add optional orderId for retries
-  isRetry?: boolean; // Flag to indicate retry
+  orderId?: string;
+  isRetry?: boolean;
 };
 
 export function PaymentButton({
@@ -25,7 +25,7 @@ export function PaymentButton({
   isRetry = false,
 }: PaymentButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const toast = useToast();
+  const { toast } = useToast();
   const router = useRouter();
 
   const handlePayment = async () => {
@@ -75,10 +75,7 @@ export function PaymentButton({
                 toast({
                   title: "Payment Successful",
                   description: "Your payment was successful!",
-                  status: "success",
-                  duration: 5000,
-                  isClosable: true,
-                  position: "top-right",
+                  variant: "default",
                 });
 
                 router.refresh();
@@ -92,10 +89,7 @@ export function PaymentButton({
                 title: "Database Error",
                 description:
                   "Your payment was successful, but we encountered an error updating your account. Please refresh the page.",
-                status: "error",
-                duration: 5000,
-                isClosable: true,
-                position: "top-right",
+                variant: "destructive",
               });
             }
           },
@@ -125,10 +119,7 @@ export function PaymentButton({
                       toast({
                         title: "Payment Successful",
                         description: "Your payment was successful!",
-                        status: "success",
-                        duration: 5000,
-                        isClosable: true,
-                        position: "top-right",
+                        variant: "default",
                       });
 
                       router.refresh();
@@ -142,10 +133,7 @@ export function PaymentButton({
                       title: "Database Error",
                       description:
                         "Your payment was successful, but we encountered an error updating your account. Please refresh the page.",
-                      status: "error",
-                      duration: 5000,
-                      isClosable: true,
-                      position: "top-right",
+                      variant: "destructive",
                     });
                   }
                 } else if (paymentStatus === "failed") {
@@ -155,10 +143,7 @@ export function PaymentButton({
                   toast({
                     title: "Payment Failed",
                     description: "Your payment was not successful.",
-                    status: "error",
-                    duration: 5000,
-                    isClosable: true,
-                    position: "top-right",
+                    variant: "destructive",
                   });
 
                   setIsLoading(false);
@@ -170,10 +155,7 @@ export function PaymentButton({
                   toast({
                     title: "Payment Cancelled",
                     description: "You have cancelled the payment.",
-                    status: "warning",
-                    duration: 5000,
-                    isClosable: true,
-                    position: "top-right",
+                    variant: "destructive",
                   });
 
                   setIsLoading(false);
@@ -184,10 +166,7 @@ export function PaymentButton({
                 toast({
                   title: "Error",
                   description: statusResult.error,
-                  status: "error",
-                  duration: 5000,
-                  isClosable: true,
-                  position: "top-right",
+                  variant: "destructive",
                 });
                 setIsLoading(false);
               }
@@ -205,9 +184,7 @@ export function PaymentButton({
         title: "Payment Error",
         description:
           error.message || "There was an issue initiating your payment.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
+        variant: "destructive",
       });
 
       // Update the payment status to "failed" if the orderId is available
@@ -220,13 +197,16 @@ export function PaymentButton({
   };
 
   return (
-    <Button
-      colorScheme={isRetry ? "orange" : "teal"}
-      width="full"
+    <button
+      className={`${
+        isRetry ? "bg-orange-800" : "bg-teal-500"
+      } text-white font-semibold py-2 px-4 w-full rounded ${
+        isLoading ? "opacity-50 cursor-not-allowed" : ""
+      }`}
       onClick={handlePayment}
-      isLoading={isLoading}
+      disabled={isLoading}
     >
       {isRetry ? "Retry Payment" : "Buy Now"}
-    </Button>
+    </button>
   );
 }

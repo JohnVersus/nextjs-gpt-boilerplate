@@ -1,24 +1,9 @@
 "use client";
 
-import {
-  Box,
-  Heading,
-  Text,
-  Link as ChakraLink,
-  Stack,
-  Button,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import Link from "next/link";
 import { PaymentButton } from "./PaymentButton";
 import { PaymentSelectModel } from "../models/payment";
-import NextLink from "next/link";
+import { dateFormatter } from "@/lib/utils";
 
 interface PricingClientPageProps {
   pathname: string;
@@ -52,67 +37,37 @@ export default function PricingClientPage({
     return false;
   };
 
-  // Date formatter using Intl (safe to use in client component)
-  const dateFormatter = new Intl.DateTimeFormat("en-GB", {
-    dateStyle: "short",
-    timeStyle: "short",
-  });
-
-  const isMobile = useBreakpointValue({ base: true, md: false });
-
   return (
     <>
-      <Box textAlign="center" mb={8}>
-        <Heading as="h1" size="2xl" mb={4}>
-          Pricing
-        </Heading>
-        <Text
-          fontSize="xl"
-          mb={6}
-          fontWeight="medium"
-          textColor="muted"
-          lineHeight="xl"
-        >
+      <div className="text-center mb-8 w-full">
+        <h1 className="text-5xl font-extrabold mb-4">Pricing</h1>
+        <p className="text-xl mb-6 font-medium text-muted leading-tight">
           This is only a demo page. Do not process any payments.
-        </Text>
-      </Box>
+        </p>
+      </div>
 
-      <Stack
-        direction={{ base: "column", md: "row" }}
-        spacing={8}
-        align="stretch"
-        justify="center"
-        width="100%"
-      >
+      <div className="flex flex-col md:flex-row gap-8 items-stretch justify-center w-full">
         {/* Basic Plan Card */}
-        <Box
-          p={5}
-          shadow="md"
-          borderWidth="1px"
-          borderRadius="md"
-          width="full"
-          maxW="sm"
-          flex="1"
-          display="flex"
-          flexDirection="column"
-        >
-          <Heading size="md" mb={4}>
-            Basic Plan
-          </Heading>
-          <Text mb={4}>Access to basic features.</Text>
-          <Text fontSize="2xl" fontWeight="bold" mb={4}>
-            ₹700
-          </Text>
-          <Box mt="auto">
+        <div className="p-5 shadow-md border border-gray-200 rounded-md w-full max-w-sm flex flex-col">
+          <h2 className="text-2xl font-bold mb-4">Basic Plan</h2>
+          <p className="mb-4">Access to basic features.</p>
+          <p className="text-3xl font-bold mb-4">₹700</p>
+          <div className="mt-auto">
             {user ? (
               hasBasicPlan ? (
-                <Button colorScheme="green" width="full" isDisabled>
+                <button
+                  className="bg-green-900 text-white font-semibold py-2 px-4 w-full rounded"
+                  disabled
+                >
                   Purchased
-                </Button>
+                </button>
               ) : hasProPlan ? (
-                <Button colorScheme="gray" width="full" isDisabled>
+                <button
+                  className="bg-gray-500 text-white font-semibold py-2 px-4 w-full rounded"
+                  disabled
+                >
                   Already have Pro Plan
-                </Button>
+                </button>
               ) : (
                 <PaymentButton
                   plan="Basic Plan"
@@ -125,51 +80,40 @@ export default function PricingClientPage({
                 />
               )
             ) : (
-              <ChakraLink as={NextLink} href={signUpUrl}>
-                <Button colorScheme="teal" width="full">
+              <Link href={signUpUrl}>
+                <button className="bg-teal-800 text-white font-semibold py-2 px-4 w-full rounded">
                   Authenticate to Buy
-                </Button>
-              </ChakraLink>
+                </button>
+              </Link>
             )}
-          </Box>
-        </Box>
+          </div>
+        </div>
 
         {/* Pro Plan Card */}
-        <Box
-          p={5}
-          shadow="md"
-          borderWidth="1px"
-          borderRadius="md"
-          width="full"
-          maxW="sm"
-          flex="1"
-          display="flex"
-          flexDirection="column"
-        >
-          <Heading size="md" mb={4}>
-            Pro Plan
-          </Heading>
-          <Text mb={4}>Access to all features.</Text>
+        <div className="p-5 shadow-md border border-gray-200 rounded-md w-full max-w-sm flex flex-col">
+          <h2 className="text-2xl font-bold mb-4">Pro Plan</h2>
+          <p className="mb-4">Access to all features.</p>
           {hasBasicPlan ? (
             <>
-              <Text fontSize="2xl" fontWeight="bold" mb={2}>
+              <p className="text-3xl font-bold mb-2">
                 Upgrade Price: ₹{upgradeAmount}
-              </Text>
-              <Text fontSize="sm" color="gray.500" mb={4}>
+              </p>
+              <p className="text-sm text-gray-500 mb-4">
                 (Original Price: ₹{proPlanPrice})
-              </Text>
+              </p>
             </>
           ) : (
-            <Text fontSize="2xl" fontWeight="bold" mb={4}>
-              ₹{proPlanPrice}
-            </Text>
+            <p className="text-3xl font-bold mb-4">₹{proPlanPrice}</p>
           )}
-          <Box mt="auto">
+          <div className="mt-auto">
             {user ? (
               hasProPlan ? (
-                <Button colorScheme="green" width="full" isDisabled>
+                <button
+                  className="bg-green-900 text-white font-semibold py-2 px-4 w-full rounded"
+                  disabled
+                >
                   Purchased
-                </Button>
+                </button>
               ) : (
                 <PaymentButton
                   plan="Pro Plan"
@@ -182,80 +126,79 @@ export default function PricingClientPage({
                 />
               )
             ) : (
-              <ChakraLink as={NextLink} href={signUpUrl}>
-                <Button colorScheme="teal" width="full">
+              <Link href={signUpUrl}>
+                <button className="bg-teal-800 text-white font-semibold py-2 px-4 w-full rounded">
                   Authenticate to Buy
-                </Button>
-              </ChakraLink>
+                </button>
+              </Link>
             )}
-          </Box>
-        </Box>
-      </Stack>
+          </div>
+        </div>
+      </div>
+
       {errorMessage && (
-        <Box mb={8}>
-          <Text color="red.500" fontSize="lg">
-            {errorMessage}
-          </Text>
-        </Box>
+        <div className="mt-8">
+          <p className="text-red-500 text-lg">{errorMessage}</p>
+        </div>
       )}
+
       {!errorMessage && userPayments.length > 0 && (
-        <>
-          {/* Transaction History Section */}
-          <Box width="full" maxW="800px" mt={10}>
-            <Heading size="lg" mb={4}>
-              Transaction History
-            </Heading>
-            {userPayments.length > 0 ? (
-              <TableContainer>
-                <Table variant="simple" size={isMobile ? "sm" : "md"}>
-                  <Thead>
-                    <Tr>
-                      <Th>Plan</Th>
-                      <Th>Amount</Th>
-                      <Th>Status</Th>
-                      <Th>Date</Th>
-                      <Th>Action</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {userPayments.map((payment: PaymentSelectModel) => (
-                      <Tr key={payment.orderId}>
-                        <Td>{payment.plan}</Td>
-                        <Td>₹{payment.amount}</Td>
-                        <Td textTransform="capitalize">{payment.status}</Td>
-                        <Td>
-                          {dateFormatter.format(new Date(payment.createdAt))}
-                        </Td>
-                        <Td>
-                          {["failed", "cancelled"].includes(payment.status) &&
-                          !hasPlan(payment.plan) &&
-                          payment.orderId ===
-                            lastFailedPayments[payment.plan]?.orderId ? (
-                            <PaymentButton
-                              plan={payment.plan}
-                              amount={payment.amount}
-                              user={{
-                                id: user?.id as string,
-                                firstName: user?.firstName as string,
-                                email: user?.email as string,
-                              }}
-                              orderId={payment.orderId}
-                              isRetry={true}
-                            />
-                          ) : (
-                            "-"
-                          )}
-                        </Td>
-                      </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
-              </TableContainer>
-            ) : (
-              <Text>No transactions found.</Text>
-            )}
-          </Box>
-        </>
+        <div className="flex flex-col w-full max-w-4xl mt-10 mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-4 text-left">
+            Transaction History
+          </h2>
+          {userPayments.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="table-auto w-full">
+                <thead>
+                  <tr>
+                    <th className="px-4 py-2">Plan</th>
+                    <th className="px-4 py-2">Amount</th>
+                    <th className="px-4 py-2">Status</th>
+                    <th className="px-4 py-2">Date</th>
+                    <th className="px-4 py-2">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {userPayments.map((payment: PaymentSelectModel) => (
+                    <tr key={payment.orderId} className="text-center">
+                      <td className="border px-4 py-2">{payment.plan}</td>
+                      <td className="border px-4 py-2">₹{payment.amount}</td>
+                      <td className="border px-4 py-2 capitalize">
+                        {payment.status}
+                      </td>
+                      <td className="border px-4 py-2">
+                        {dateFormatter.format(new Date(payment.createdAt))}
+                      </td>
+                      <td className="border px-4 py-2">
+                        {["failed", "cancelled"].includes(payment.status) &&
+                        !hasPlan(payment.plan) &&
+                        payment.orderId ===
+                          lastFailedPayments[payment.plan]?.orderId ? (
+                          <PaymentButton
+                            plan={payment.plan}
+                            amount={payment.amount}
+                            user={{
+                              id: user?.id as string,
+                              firstName: user?.firstName as string,
+                              email: user?.email as string,
+                            }}
+                            orderId={payment.orderId}
+                            isRetry={true}
+                          />
+                        ) : (
+                          "-"
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p>No transactions found.</p>
+          )}
+        </div>
       )}
     </>
   );
