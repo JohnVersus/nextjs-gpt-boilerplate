@@ -79,7 +79,7 @@ const Roadmap = () => {
                   href={item.linkHref}
                   target={item.isExternal ? "_blank" : undefined}
                   rel={item.isExternal ? "noopener noreferrer" : undefined}
-                  className="font-semibold text-sm hover:underline hover:underline-offset-6"
+                  className="font-semibold text-sm hover:underline hover:underline-offset-4"
                 >
                   {`${item.linkText} →`}
                 </Link>
