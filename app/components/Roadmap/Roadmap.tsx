@@ -10,6 +10,7 @@ const items = [
     linkText: "View Swagger UI",
     linkHref: "/swagger",
     status: "",
+    isExternal: true,
   },
   {
     title: "API Schema Generation",
@@ -18,6 +19,7 @@ const items = [
     linkText: "View API Schema",
     linkHref: "/api/swagger",
     status: "",
+    isExternal: true,
   },
   {
     title: "Publishable as GPT",
@@ -34,6 +36,7 @@ const items = [
     linkText: "View Swagger UI",
     linkHref: "/swagger",
     status: "",
+    isExternal: true,
   },
   {
     title: "Auth & Billing",

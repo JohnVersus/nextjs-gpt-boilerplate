@@ -1,10 +1,9 @@
-import { Box, Heading, Flex, Text, Link as ChakraLink } from "@chakra-ui/react";
-import SignUpForm from "./SignUpForm";
 import { Suspense } from "react";
+import SignUpForm from "./SignUpForm";
 import { checkUserSession } from "../../utils/checkUserSession";
-import NextLink from "next/link";
 import Loading from "../../loading";
 import { Metadata } from "next";
+import Link from "next/link";
 
 interface SignUpPageProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -47,39 +46,35 @@ export default async function SignUpWithEmailPassword({
   await checkUserSession(redirectUrl);
 
   return (
-    <Flex
-      bg="primary"
-      color="text"
-      py={20}
-      px={10}
-      textAlign="left"
-      align="center"
-      justify="center"
-      height="90vh"
-      gap={8}
-      direction={{ base: "column", md: "row" }}
+    <div
+      className="
+        bg-primary text-text
+        py-20 px-10
+        text-left
+        flex items-center justify-center
+        h-[90vh]
+        gap-8
+        flex-col md:flex-row
+      "
     >
-      <Box maxW="md" minW="25vw" position="relative">
-        <Heading as="h1" size="2xl" mb={4}>
-          Sign-up
-        </Heading>
+      <div className="max-w-md min-w-[25vw] relative">
+        <h1 className="text-5xl font-extrabold mb-4">Sign-up</h1>
 
         {/* Use Suspense to show a fallback while the client component loads */}
         <Suspense fallback={<Loading />}>
           <SignUpForm redirectUrl={redirectUrl} />
         </Suspense>
 
-        <Text mt="4">
+        <p className="mt-4">
           Already have an account?{" "}
-          <ChakraLink
-            as={NextLink}
+          <Link
             href={`/signin?redirect=${redirectUrl}`}
-            color="blue.500"
+            className="text-blue-500"
           >
             Sign in
-          </ChakraLink>
-        </Text>
-      </Box>
-    </Flex>
+          </Link>
+        </p>
+      </div>
+    </div>
   );
 }

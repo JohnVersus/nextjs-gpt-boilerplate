@@ -137,8 +137,8 @@ export default function PricingClientPage({
       </div>
 
       {errorMessage && (
-        <div className="mt-8">
-          <p className="text-red-500 text-lg">{errorMessage}</p>
+        <div className="mt-8 w-full">
+          <p className="text-red-500 text-lg text-center">{errorMessage}</p>
         </div>
       )}
 
@@ -152,11 +152,11 @@ export default function PricingClientPage({
               <table className="table-auto w-full">
                 <thead>
                   <tr>
-                    <th className="px-4 py-2">Plan</th>
-                    <th className="px-4 py-2">Amount</th>
-                    <th className="px-4 py-2">Status</th>
-                    <th className="px-4 py-2">Date</th>
-                    <th className="px-4 py-2">Action</th>
+                    <th className="border px-4 py-2">Plan</th>
+                    <th className="border px-4 py-2">Amount</th>
+                    <th className="border px-4 py-2">Status</th>
+                    <th className="border px-4 py-2">Date</th>
+                    <th className="border px-4 py-2">Action</th>
                   </tr>
                 </thead>
                 <tbody>

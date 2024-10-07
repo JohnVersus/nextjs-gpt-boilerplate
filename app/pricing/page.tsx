@@ -66,7 +66,7 @@ export default async function PricingPage() {
     } catch (error) {
       console.error("Error fetching past user payments:", error);
       errorMessage =
-        "Error fetching past user payments. Please refresh the page or try again later.";
+        "Error fetching past payments. Please refresh the page or try again later.";
     }
 
     if (!errorMessage) {

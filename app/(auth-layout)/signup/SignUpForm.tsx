@@ -1,17 +1,11 @@
 "use client";
 
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  VStack,
-  Text,
-  Spinner,
-} from "@chakra-ui/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signUpAction } from "./signUpAction";
+import { InputField } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 interface SignUpFormProps {
   redirectUrl: string;
@@ -30,7 +24,6 @@ export default function SignUpForm({ redirectUrl }: SignUpFormProps) {
       const result = await signUpAction(formData, redirectUrl);
 
       if (result.emailVerificationRequired) {
-        // Redirect to verify email page
         router.push(
           `/verify-email?redirect=${encodeURIComponent(
             redirectUrl
@@ -39,10 +32,8 @@ export default function SignUpForm({ redirectUrl }: SignUpFormProps) {
           )}&token=${encodeURIComponent(result.pendingAuthenticationToken)}`
         );
       } else if (result.success) {
-        // Successful sign-up
         router.push(redirectUrl);
       } else if (result.error) {
-        // Display the error message
         setError(result.error);
       } else {
         setError("An unexpected error occurred.");
@@ -56,58 +47,54 @@ export default function SignUpForm({ redirectUrl }: SignUpFormProps) {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <VStack spacing="4">
-          <FormControl id="firstName" isRequired>
-            <FormLabel>First Name</FormLabel>
-            <Input type="text" name="firstName" autoComplete="given-name" />
-          </FormControl>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <InputField
+          label="First Name"
+          id="firstName"
+          type="text"
+          name="firstName"
+          autoComplete="given-name"
+          required
+          autoFocus
+        />
+        <InputField
+          label="Last Name"
+          id="lastName"
+          type="text"
+          name="lastName"
+          autoComplete="family-name"
+          required
+        />
+        <InputField
+          label="Email"
+          id="email"
+          type="email"
+          name="email"
+          autoCapitalize="off"
+          autoComplete="username"
+          required
+        />
+        <InputField
+          label="Password"
+          id="password"
+          type="password"
+          name="password"
+          autoCapitalize="off"
+          autoComplete="new-password"
+          required
+        />
 
-          <FormControl id="lastName" isRequired>
-            <FormLabel>Last Name</FormLabel>
-            <Input type="text" name="lastName" autoComplete="family-name" />
-          </FormControl>
-
-          <FormControl id="email" isRequired>
-            <FormLabel>Email</FormLabel>
-            <Input
-              type="email"
-              name="email"
-              autoCapitalize="off"
-              autoComplete="username"
-              autoFocus
-            />
-          </FormControl>
-
-          <FormControl id="password" isRequired>
-            <FormLabel>Password</FormLabel>
-            <Input
-              type="password"
-              name="password"
-              autoCapitalize="off"
-              autoComplete="new-password"
-            />
-          </FormControl>
-
-          <Button
-            type="submit"
-            background={"bgPrimary"}
-            variant="outline"
-            width="full"
-            isLoading={isLoading}
-            disabled={isLoading}
-            spinner={<Spinner color="white" />}
-          >
-            Sign-up
-          </Button>
-        </VStack>
+        <Button
+          type="submit"
+          variant="outline"
+          className="w-full bg-bgPrimary border border-primary text-primary font-semibold hover:bg-bgGray"
+          disabled={isLoading}
+        >
+          {isLoading ? <LoadingSpinner className="mr-2" /> : "Sign-up"}
+        </Button>
       </form>
 
-      {error && (
-        <Text color="red.500" mt="4">
-          {error}
-        </Text>
-      )}
+      {error && <p className="text-red-500 mt-4">{error}</p>}
     </>
   );
 }
