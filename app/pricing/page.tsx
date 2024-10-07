@@ -1,4 +1,3 @@
-import { Box, Flex, Button } from "@chakra-ui/react";
 import { getUser, signOut } from "@workos-inc/authkit-nextjs";
 import { Suspense } from "react";
 import { checkPaymentStatus, updatePaymentStatus } from "./razorpay";
@@ -67,7 +66,7 @@ export default async function PricingPage() {
     } catch (error) {
       console.error("Error fetching past user payments:", error);
       errorMessage =
-        "Error fetching past user payments. Please refresh the page or try again later.";
+        "Error fetching past payments. Please refresh the page or try again later.";
     }
 
     if (!errorMessage) {
@@ -167,37 +166,31 @@ export default async function PricingPage() {
     errorMessage,
     lastFailedPayments,
   };
+
   return (
     <Suspense fallback={<Loading />}>
-      <Box minH="100vh" display="flex" flexDirection="column">
-        <Flex
-          flex="1"
-          bg="primary"
-          color="text"
-          py={10}
-          px={10}
-          textAlign="left"
-          align="center"
-          justify="flex-start"
-          direction="column"
-        >
+      <div className="min-h-screen flex flex-col">
+        <div className="flex-1 bg-primary text-text py-10 px-10 flex flex-col items-start justify-start">
           <PricingClientPage pathname={pathname} pricingData={pricingData} />
           {user && (
-            <Flex justify="flex-end" width="auto" mt={8}>
+            <div className="flex justify-center w-full mt-8">
               <form
                 action={async () => {
                   "use server";
                   await signOut();
                 }}
               >
-                <Button variant="link" color="muted" type="submit">
+                <button
+                  type="submit"
+                  className="text-muted hover:underline focus:outline-none"
+                >
                   Log out
-                </Button>
+                </button>
               </form>
-            </Flex>
+            </div>
           )}
-        </Flex>
-      </Box>
+        </div>
+      </div>
     </Suspense>
   );
 }

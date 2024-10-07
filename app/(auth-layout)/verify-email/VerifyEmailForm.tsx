@@ -1,17 +1,11 @@
 "use client";
 
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  VStack,
-  Text,
-  Spinner,
-} from "@chakra-ui/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { verifyEmailAction, sendCodeAction } from "./verifyEmailAction";
+import { InputField } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 interface VerifyEmailFormProps {
   redirectUrl: string;
@@ -82,63 +76,54 @@ export default function VerifyEmailForm({
 
   return (
     <>
-      <form onSubmit={handleVerifyEmail}>
-        <VStack spacing="4">
-          <FormControl id="code" isRequired>
-            <FormLabel>Enter code from the email</FormLabel>
-            <Input
-              type="text"
-              name="code"
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              pattern="^\d{6}$"
-              maxLength={6}
-              minLength={6}
-              autoFocus
-            />
-          </FormControl>
-
-          <Input
-            type="hidden"
-            name="pendingAuthenticationToken"
-            value={pendingAuthenticationToken || ""}
+      <form onSubmit={handleVerifyEmail} className="space-y-4">
+        <div>
+          <InputField
+            type="text"
+            name="code"
+            id="code"
+            label="Enter code from the email"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            pattern="^\d{6}$"
+            maxLength={6}
+            minLength={6}
+            autoFocus
+            required
           />
+        </div>
 
-          <Button
-            type="submit"
-            background={"bgPrimary"}
-            variant="outline"
-            width="full"
-            isLoading={isLoading}
-            disabled={isLoading}
-            spinner={<Spinner color="white" />}
-          >
-            Continue
-          </Button>
-        </VStack>
+        <InputField
+          type="hidden"
+          name="pendingAuthenticationToken"
+          value={pendingAuthenticationToken || ""}
+          label={""}
+        />
+
+        <Button
+          type="submit"
+          variant="outline"
+          className="w-full bg-bgPrimary border border-primary text-primary font-semibold hover:bg-bgGray"
+          disabled={isLoading}
+        >
+          {isLoading ? <LoadingSpinner className="mr-2" /> : "Continue"}
+        </Button>
       </form>
 
       <Button
-        mt={4}
         variant="link"
-        color="blue.500"
+        className="mt-4 text-blue-500"
         onClick={handleResendCode}
-        isDisabled={isLoading}
+        disabled={isLoading}
       >
         Resend Code
       </Button>
 
       {codeSentMessage && (
-        <Text color="green.500" mt="4">
-          {codeSentMessage}
-        </Text>
+        <p className="text-green-500 mt-4">{codeSentMessage}</p>
       )}
 
-      {error && (
-        <Text color="red.500" mt="4">
-          {error}
-        </Text>
-      )}
+      {error && <p className="text-red-500 mt-4">{error}</p>}
     </>
   );
 }

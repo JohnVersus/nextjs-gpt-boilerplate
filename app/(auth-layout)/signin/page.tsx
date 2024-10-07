@@ -1,8 +1,6 @@
-import { Box, Heading, Flex, Text, Link as ChakraLink } from "@chakra-ui/react";
 import { Suspense } from "react";
 import SignInForm from "./SignInForm";
 import { checkUserSession } from "../../utils/checkUserSession";
-import NextLink from "next/link";
 import Loading from "../../loading";
 
 interface SignInPageProps {
@@ -19,28 +17,23 @@ export default async function SignInWithEmailPassword({
   await checkUserSession(redirectUrl);
 
   return (
-    <Flex
-      bg="primary"
-      color="text"
-      py={20}
-      px={10}
-      textAlign="left"
-      align="center"
-      justify="center"
-      height="90vh"
-      gap={8}
-      direction={{ base: "column", md: "row" }}
+    <div
+      className="
+        bg-primary text-text
+        py-20 px-10
+        text-left
+        flex items-center justify-center
+        h-[90vh]
+        gap-8
+        flex-col md:flex-row
+      "
     >
-      <Box maxW="md" minW="25vw" position="relative">
-        <Heading as="h1" size="2xl" mb={4}>
-          Sign-in
-        </Heading>
-
+      <div className="max-w-md min-w-[25vw] relative">
         {/* Use Suspense to show a fallback while the client component loads */}
         <Suspense fallback={<Loading />}>
           <SignInForm redirectUrl={redirectUrl} />
         </Suspense>
-      </Box>
-    </Flex>
+      </div>
+    </div>
   );
 }

@@ -1,20 +1,11 @@
 "use client";
 
-import {
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  Heading,
-  VStack,
-  Text,
-  Flex,
-  Spinner,
-} from "@chakra-ui/react";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { sendReset, resetPassword } from "./resetPasswordAction";
+import { InputField } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 interface ResetPasswordState {
   error?: string | null;
@@ -77,134 +68,123 @@ export default function ResetPassword() {
 
   if (!token) {
     return (
-      <Flex
-        bg="primary"
-        color="text"
-        py={20}
-        px={10}
-        textAlign="left"
-        align="center"
-        justify="center"
-        height="90vh"
-        gap={8}
-        direction={{ base: "column", md: "row" }}
+      <div
+        className="
+          bg-primary text-text
+          py-20 px-10
+          text-left
+          flex items-center justify-center
+          h-[90vh]
+          gap-8
+          flex-col md:flex-row
+        "
       >
-        <Box maxW="md">
-          <Heading as="h1" size="2xl" mb={4}>
-            Reset Password
-          </Heading>
+        <div className="max-w-md">
+          <h1 className="text-5xl font-extrabold mb-4">Reset Password</h1>
 
-          <form onSubmit={handleSendReset}>
-            <VStack spacing="4">
-              <FormControl id="email" isRequired>
-                <FormLabel>Email</FormLabel>
-                <Input
-                  type="email"
-                  name="email"
-                  autoCapitalize="off"
-                  autoComplete="username"
-                  autoFocus
-                />
-              </FormControl>
+          <form onSubmit={handleSendReset} className="space-y-4">
+            <div>
+              <InputField
+                type="email"
+                name="email"
+                id="email"
+                required
+                autoCapitalize="off"
+                autoComplete="username"
+                autoFocus
+                label={"Email"}
+              />
+            </div>
 
-              <Button
-                type="submit"
-                background={"bgPrimary"}
-                variant="outline"
-                width="full"
-                isLoading={isLoadingSendReset}
-                disabled={isLoadingSendReset}
-                spinner={<Spinner color="white" />}
-              >
-                Send Reset Instructions
-              </Button>
-            </VStack>
+            <Button
+              type="submit"
+              variant="outline"
+              className="w-full bg-bgPrimary border border-primary text-primary font-semibold hover:bg-bgGray"
+              disabled={isLoadingSendReset}
+            >
+              {isLoadingSendReset && <LoadingSpinner className="mr-2" />}
+              Send Reset Instructions
+            </Button>
           </form>
 
           {sendResetState.error && (
-            <Text color="red.500" mt="4">
-              {sendResetState.error}
-            </Text>
+            <p className="text-red-500 mt-4">{sendResetState.error}</p>
           )}
 
           {sendResetState.success && (
-            <Text color="green.500" mt="4">
+            <p className="text-green-500 mt-4">
               Reset instructions sent to your email.
-            </Text>
+            </p>
           )}
-        </Box>
-      </Flex>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Flex
-      bg="primary"
-      color="text"
-      py={20}
-      px={10}
-      textAlign="left"
-      align="center"
-      justify="center"
-      height="80vh"
-      gap={8}
-      direction={{ base: "column", md: "row" }}
+    <div
+      className="
+        bg-primary text-text
+        py-20 px-10
+        text-left
+        flex items-center justify-center
+        h-[80vh]
+        gap-8
+        flex-col md:flex-row
+      "
     >
-      <Box maxW="md">
-        <Heading as="h1" size="2xl" mb={4}>
-          Reset Password
-        </Heading>
+      <div className="max-w-md">
+        <h1 className="text-5xl font-extrabold mb-4">Reset Password</h1>
 
-        <form onSubmit={handleResetPassword}>
-          <VStack spacing="4">
-            <FormControl id="newPassword" isRequired>
-              <FormLabel>New Password</FormLabel>
-              <Input
-                type="password"
-                name="newPassword"
-                autoCapitalize="off"
-                autoComplete="new-password"
-                autoFocus
-              />
-            </FormControl>
+        <form onSubmit={handleResetPassword} className="space-y-4">
+          <div>
+            <InputField
+              type="password"
+              name="newPassword"
+              id="newPassword"
+              label="New Password"
+              autoCapitalize="off"
+              autoComplete="new-password"
+              autoFocus
+            />
+          </div>
 
-            <Input type="hidden" name="token" value={token} />
+          <InputField type="hidden" name="token" value={token} label={""} />
+          <InputField type="hidden" name="token" value={token} label={""} />
 
-            {email && (
-              <Input
-                type="hidden"
-                name="email"
-                value={email}
-                autoComplete="username"
-              />
-            )}
+          <InputField type="hidden" name="token" value={token} label={""} />
 
-            <Button
-              type="submit"
-              background={"bgPrimary"}
-              variant="outline"
-              width="full"
-              isLoading={isLoadingResetPassword}
-              disabled={isLoadingResetPassword}
-              spinner={<Spinner color="white" />}
-            >
-              Continue
-            </Button>
-          </VStack>
+          {email && (
+            <InputField
+              type="hidden"
+              name="email"
+              value={email}
+              autoComplete="username"
+              label={""}
+            />
+          )}
+
+          <Button
+            type="submit"
+            variant="outline"
+            className="w-full bg-bgPrimary border border-primary text-primary font-semibold hover:bg-bgGray"
+            disabled={isLoadingResetPassword}
+          >
+            {isLoadingResetPassword && <LoadingSpinner className="mr-2" />}
+            Continue
+          </Button>
         </form>
 
         {resetPasswordState.error && (
-          <Text color="red.500" mt="4">
-            {resetPasswordState.error}
-          </Text>
+          <p className="text-red-500 mt-4">{resetPasswordState.error}</p>
         )}
 
         {resetPasswordState.success && (
-          <Text color="green.500" mt="4">
+          <p className="text-green-500 mt-4">
             Password reset successfully. Redirecting to sign-in page...
-          </Text>
+          </p>
         )}
-      </Box>
-    </Flex>
+      </div>
+    </div>
   );
 }

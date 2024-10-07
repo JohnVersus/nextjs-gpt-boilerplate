@@ -1,82 +1,72 @@
-import { Box, Flex, Text, Stack, Link as ChakraLink } from "@chakra-ui/react";
-import NextLink from "next/link";
+import Link from "next/link";
 
 const Footer = () => {
   return (
-    <Box bg="primary" color="white" py={4} px={4}>
-      <Flex
-        direction={{ base: "column", md: "row" }}
-        justify="space-between"
-        align="center"
-        maxW="7xl"
-        mx="auto"
-      >
-        <Text fontSize="sm" textAlign={{ base: "center", md: "left" }}>
+    <footer className="bg-primary text-white py-4 px-4">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
+        <span className="text-sm text-center md:text-left">
           © 2024 GPT Boilerplate
-        </Text>
-        <Stack
-          direction={{ base: "column", md: "row" }}
-          spacing={4}
-          mt={{ base: 2, md: 0 }}
-          textAlign={{ base: "center", md: "left" }}
-        >
-          <ChakraLink as={NextLink} href="/" fontSize="sm" fontWeight="medium">
-            Home
-          </ChakraLink>
-          <ChakraLink
-            as={NextLink}
-            href="/swagger"
-            fontSize="sm"
-            fontWeight="medium"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            API Docs
-          </ChakraLink>
-          <ChakraLink
-            as={NextLink}
-            href="/#roadmap"
-            fontSize="sm"
-            fontWeight="medium"
-          >
-            Roadmap
-          </ChakraLink>
-          <ChakraLink
-            as={NextLink}
-            href="/pricing"
-            fontSize="sm"
-            fontWeight="medium"
-          >
-            Pricing
-          </ChakraLink>
-          <ChakraLink
-            as={NextLink}
-            href="/TermsAndConditions"
-            fontSize="sm"
-            fontWeight="medium"
-            rel="prefetch"
-          >
-            Terms and Conditions
-          </ChakraLink>
-          <ChakraLink
-            as={NextLink}
-            href="/CancellationAndRefundPolicy"
-            fontSize="sm"
-            fontWeight="medium"
-          >
-            Cancellation and Refund Policy
-          </ChakraLink>
-          <ChakraLink
-            as={NextLink}
-            href="/PrivacyPolicy"
-            fontSize="sm"
-            fontWeight="medium"
-          >
-            Privacy Policy
-          </ChakraLink>
-        </Stack>
-      </Flex>
-    </Box>
+        </span>
+        <ul className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4 mt-2 md:mt-0 text-center md:text-left">
+          <li>
+            <Link
+              href="/"
+              className="text-sm font-medium hover:underline-offset-2"
+            >
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/swagger"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-thin hover:underline"
+            >
+              API Docs
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/#roadmap"
+              className="text-sm font-thin hover:underline"
+            >
+              Roadmap
+            </Link>
+          </li>
+          <li>
+            <Link href="/pricing" className="text-sm font-thin hover:underline">
+              Pricing
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/TermsAndConditions"
+              rel="prefetch"
+              className="text-sm font-thin hover:underline"
+            >
+              Terms and Conditions
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/CancellationAndRefundPolicy"
+              className="text-sm font-thin hover:underline"
+            >
+              Cancellation and Refund Policy
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/PrivacyPolicy"
+              className="text-sm font-thin hover:underline"
+            >
+              Privacy Policy
+            </Link>
+          </li>
+        </ul>
+      </div>
+    </footer>
   );
 };
 

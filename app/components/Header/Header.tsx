@@ -1,17 +1,9 @@
 "use client";
-import {
-  Box,
-  Flex,
-  Stack,
-  Text,
-  Image,
-  IconButton,
-  useDisclosure,
-  Collapse,
-  Link as ChakraLink,
-} from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import NextLink from "next/link";
+
+import React, { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Menu, X } from "lucide-react";
 
 const NavLink = ({
   href,
@@ -23,76 +15,95 @@ const NavLink = ({
   [x: string]: any;
 }) => {
   return (
-    <ChakraLink
-      as={NextLink}
-      rel={"prefetch"}
+    <Link
       href={href}
-      _hover={{
-        textDecoration: "underline",
-        textUnderlineOffset: "6px",
-      }}
       {...props}
+      className="hover:underline hover:underline-offset-4"
     >
       {children}
-    </ChakraLink>
+    </Link>
   );
 };
 
 const Header = () => {
-  const { isOpen, onToggle } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const onToggle = () => setIsOpen(!isOpen);
 
   return (
-    <Box bg="primary" color="white" py={4} fontWeight="medium">
-      <Flex maxW="7xl" mx="auto" px={4} align="center" justify="space-between">
-        <Flex align="center">
-          <Image src="/icon.svg" alt="Logo" boxSize="24px" mr={2} />
-          <ChakraLink
-            as={NextLink}
-            href="/"
-            _hover={{ textDecoration: "none" }}
-          >
-            <Text fontSize="lg" fontWeight="bold" textDecoration="none">
-              GPT Boilerplate
-            </Text>
-          </ChakraLink>
-        </Flex>
-        <Flex display={{ base: "none", md: "flex" }}>
-          <Stack direction="row" spacing={4}>
-            <NavLink href="/">Home</NavLink>
-            <NavLink href="/swagger" target="_blank" rel="noopener noreferrer">
-              API Docs
-            </NavLink>
-            <NavLink href="/#roadmap">Roadmap</NavLink>
-            <NavLink href="/pricing">Pricing</NavLink>
-          </Stack>
-        </Flex>
-        <IconButton
-          display={{ base: "flex", md: "none" }}
+    <header className="bg-primary text-white py-4 font-normal">
+      <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
+        <div className="flex items-center">
+          <Image
+            src="/icon.svg"
+            alt="Logo"
+            width={24}
+            height={24}
+            className="mr-2"
+          />
+          <Link href="/" className="hover:no-underline">
+            <span className="text-lg font-bold">GPT Boilerplate</span>
+          </Link>
+        </div>
+        <nav className="hidden md:flex">
+          <ul className="flex space-x-4">
+            <li>
+              <NavLink href="/">Home</NavLink>
+            </li>
+            <li>
+              <NavLink
+                href="/swagger"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                API Docs
+              </NavLink>
+            </li>
+            <li>
+              <NavLink href="/#roadmap">Roadmap</NavLink>
+            </li>
+            <li>
+              <NavLink href="/pricing">Pricing</NavLink>
+            </li>
+          </ul>
+        </nav>
+        <button
+          className="md:hidden flex items-center justify-center"
           onClick={onToggle}
-          icon={
-            isOpen ? (
-              <CloseIcon color={"muted"} />
-            ) : (
-              <HamburgerIcon color={"muted"} />
-            )
-          }
-          variant="black"
           aria-label="Toggle Navigation"
-        />
-      </Flex>
-      <Collapse in={isOpen} animateOpacity>
-        <Box pb={4} display={{ md: "none" }} textAlign="right" pr={4}>
-          <Stack as="nav" spacing={4}>
-            <NavLink href="/">Home</NavLink>
-            <NavLink href="/swagger" target="_blank" rel="noopener noreferrer">
-              API Docs
-            </NavLink>
-            <NavLink href="/#roadmap">Roadmap</NavLink>
-            <NavLink href="/pricing">Pricing</NavLink>
-          </Stack>
-        </Box>
-      </Collapse>
-    </Box>
+        >
+          {isOpen ? (
+            <X className="w-6 h-6 text-muted" />
+          ) : (
+            <Menu className="w-6 h-6 text-muted" />
+          )}
+        </button>
+      </div>
+      {isOpen && (
+        <div className="md:hidden">
+          <ul className="flex flex-col items-end pr-4 pb-4 space-y-4">
+            <li>
+              <NavLink href="/">Home</NavLink>
+            </li>
+            <li>
+              <NavLink
+                href="/swagger"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                API Docs
+              </NavLink>
+            </li>
+            <li>
+              <NavLink href="/#roadmap">Roadmap</NavLink>
+            </li>
+            <li>
+              <NavLink href="/pricing">Pricing</NavLink>
+            </li>
+          </ul>
+        </div>
+      )}
+    </header>
   );
 };
 

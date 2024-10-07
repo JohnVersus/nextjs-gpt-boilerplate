@@ -14,17 +14,21 @@
     "postbuild": "next-sitemap"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^2.1.1",
-    "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-toast": "^1.2.2",
     "@ts-rest/core": "^3.45.2",
     "@ts-rest/open-api": "^3.45.2",
     "@workos-inc/authkit-nextjs": "^0.8.2",
     "@workos-inc/node": "^7.21.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
     "drizzle-kit": "^0.22.7",
     "drizzle-orm": "^0.31.0",
     "framer-motion": "^11.2.13",
+    "lucide-react": "^0.447.0",
     "mysql2": "^3.10.0",
     "next": "14.2.3",
     "next-sitemap": "^4.2.3",
@@ -33,6 +37,8 @@
     "react": "^18",
     "react-dom": "^18",
     "swagger-ui-react": "^5.0.0",
+    "tailwind-merge": "^2.5.3",
+    "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -40,8 +46,11 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/swagger-ui-react": "^4.18.3",
+    "autoprefixer": "^10.4.20",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
     "typescript": "^5"
   }
 }

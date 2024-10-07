@@ -1,8 +1,6 @@
-import { Box, Heading, Text, Flex } from "@chakra-ui/react";
 import { Suspense } from "react";
 import VerifyEmailForm from "./VerifyEmailForm";
 import { checkUserSession } from "../../utils/checkUserSession";
-
 import { redirect } from "next/navigation";
 import Loading from "../../loading";
 
@@ -29,29 +27,24 @@ export default async function VerifyEmail({
   await checkUserSession(redirectUrl);
 
   return (
-    <Flex
-      bg="primary"
-      color="text"
-      py={20}
-      px={10}
-      textAlign="left"
-      align="center"
-      justify="center"
-      height="90vh"
-      gap={8}
-      direction={{ base: "column", md: "row" }}
+    <div
+      className="
+        bg-primary text-text
+        py-20 px-10
+        text-left
+        flex items-center justify-center
+        h-[90vh]
+        gap-8
+        flex-col md:flex-row
+      "
     >
-      <Box maxW="md">
-        <Heading as="h1" size="2xl" mb={4}>
-          Verify email
-        </Heading>
+      <div className="max-w-md">
+        <h1 className="text-5xl font-extrabold mb-4">Verify email</h1>
 
-        <Text mb={6}>
+        <p className="mb-6">
           You need to verify your email before proceeding to your account.
-        </Text>
-        <Text mb={6} fontWeight="bold">
-          Email: {email}
-        </Text>
+        </p>
+        <p className="mb-6 font-bold">Email: {email}</p>
 
         {/* Use Suspense to handle loading state */}
         <Suspense fallback={<Loading />}>
@@ -61,7 +54,7 @@ export default async function VerifyEmail({
             pendingAuthenticationToken={pendingAuthenticationToken}
           />
         </Suspense>
-      </Box>
-    </Flex>
+      </div>
+    </div>
   );
 }
