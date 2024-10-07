@@ -1,70 +1,61 @@
-import {
-  Box,
-  Heading,
-  Text,
-  Button,
-  Flex,
-  Link as ChakraLink,
-} from "@chakra-ui/react";
 import Image from "next/image";
-import NextLink from "next/link";
+import { Button } from "@/components/ui/button";
 
 const Hero = () => {
   return (
-    <Flex
-      bg="primary"
-      color="text"
-      py={20}
-      px={10}
-      textAlign="left"
-      align="center"
-      justify="center"
-      height="80vh"
-      gap={8}
-      direction={{ base: "column", md: "row" }}
+    <div
+      className="
+        flex flex-col md:flex-row
+        items-center justify-center
+        bg-primary text-text
+        py-20 px-10
+        h-[80vh]
+        gap-8
+        text-left
+      "
     >
-      <Box maxW="md">
-        <Heading as="h1" size="2xl" mb={4}>
+      <div className="max-w-md">
+        <h1 className="text-5xl font-extrabold mb-4 leading-snug">
           Jumpstart your GPT project
-        </Heading>
-        <Text
-          fontSize="xl"
-          mb={6}
-          fontWeight="medium"
-          textColor="muted"
-          lineHeight="xl"
-        >
+        </h1>
+        <p className="text-xl mb-6 font-medium text-textGray leading-tight">
           This boilerplate provides a base template for building your next
           GPT-powered application.
-        </Text>
-        <ChakraLink
-          as={NextLink}
-          href="https://github.com/JohnVersus/nextjs-gpt-boilerplate"
-          isExternal
+        </p>
+        <Button
+          asChild
+          variant="outline"
+          className="bg-bgPrimary text-primary font-semibold border-primary hover:bg-bgGray"
         >
-          <Button background={"bgPrimary"} variant="outline">
+          <a
+            href="https://github.com/JohnVersus/nextjs-gpt-boilerplate"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Get Started
-          </Button>
-        </ChakraLink>
-      </Box>
-      <Box
-        display={{ base: "none", md: "block" }}
-        borderRadius={"15px"}
-        width={{ base: "100%", sm: "350px" }}
-        height={{ base: "auto", sm: "350px" }}
-        position="relative"
-        alignSelf="center"
+          </a>
+        </Button>
+      </div>
+      <div
+        className="
+          hidden md:block
+          self-center
+          rounded-[15px]
+          w-full sm:w-[350px]
+          h-auto sm:h-[350px]
+          relative
+        "
       >
-        <Flex align="center" justify="center" height={"100%"}>
+        <div className="flex items-center justify-center h-full">
           <Image
             src="/image1.png"
             alt="NextJs GPT Boilerplate"
             width={350}
             height={350}
           />
-        </Flex>
-      </Box>
-    </Flex>
+        </div>
+      </div>
+    </div>
   );
 };
 

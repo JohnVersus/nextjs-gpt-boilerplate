@@ -1,14 +1,6 @@
 import React from "react";
-import {
-  Box,
-  SimpleGrid,
-  Text,
-  Heading,
-  VStack,
-  Container,
-  Badge,
-} from "@chakra-ui/react";
-import NextLink from "next/link";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 
 const items = [
   {
@@ -62,70 +54,41 @@ const items = [
 
 const Roadmap = () => {
   return (
-    <Box bg="bgGray" py={16} id="roadmap">
-      <Container maxW="container.lg">
-        <Heading as="h2" size="xl" mb={4}>
-          Roadmap
-        </Heading>
-        <Text mb={8} color="textGray" fontWeight="medium">
-          Check out the completed and upcoming features we&apos;re working on to
+    <div className="bg-bgGray py-16 overflow-x-hidden" id="roadmap">
+      <div className="container max-w-screen-lg mx-auto p-4">
+        <h2 className="text-3xl font-extrabold mb-4">Roadmap</h2>
+        <p className="mb-8 text-textGray font-medium">
+          {/* eslint-disable-next-line react/no-unescaped-entities */}
+          Check out the completed and upcoming features we're working on to
           enhance your GPT development experience.
-        </Text>
-        <SimpleGrid columns={{ sm: 1, md: 2 }} spacing={10}>
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
           {items.map((item, index) => (
-            <VStack
+            <div
               key={index}
-              p={6}
-              align="start"
-              bg="white"
-              spacing={4}
-              borderRadius="md"
-              boxShadow="sm"
+              className="flex flex-col p-4 md:p-6 items-start bg-white rounded-md shadow-sm space-y-4 w-full"
             >
-              <Heading as="h3" size="md">
-                {item.title}
-              </Heading>
-              <Text color="textGray" fontWeight="medium">
-                {item.description}
-              </Text>
+              <h3 className="text-xl font-bold">{item.title}</h3>
+              <p className="text-textGray font-medium">{item.description}</p>
               {item.status ? (
-                <Badge bg="bgGray" px={4} py={1} borderRadius="full">
-                  <Text fontWeight="semiBold" size={"sm"}>
-                    {item.status}
-                  </Text>
+                <Badge className="bg-bgGray" variant={"outline"}>
+                  <span className="font-semibold text-sm">{item.status}</span>
                 </Badge>
-              ) : item.isExternal ? (
-                <NextLink href={item.linkHref} target="_blank">
-                  <Text
-                    fontWeight="semiBold"
-                    fontSize={"sm"}
-                    _hover={{
-                      textDecoration: "underline",
-                      textUnderlineOffset: "6px",
-                    }}
-                  >
-                    {item.linkText} &rarr;
-                  </Text>
-                </NextLink>
-              ) : (
-                <NextLink href={item.linkHref || ""}>
-                  <Text
-                    fontWeight="semiBold"
-                    fontSize={"sm"}
-                    _hover={{
-                      textDecoration: "underline",
-                      textUnderlineOffset: "6px",
-                    }}
-                  >
-                    {item.linkText} &rarr;
-                  </Text>
-                </NextLink>
-              )}
-            </VStack>
+              ) : item.linkText && item.linkHref ? (
+                <Link
+                  href={item.linkHref}
+                  target={item.isExternal ? "_blank" : undefined}
+                  rel={item.isExternal ? "noopener noreferrer" : undefined}
+                  className="font-semibold text-sm hover:underline hover:underline-offset-6"
+                >
+                  {`${item.linkText} →`}
+                </Link>
+              ) : null}
+            </div>
           ))}
-        </SimpleGrid>
-      </Container>
-    </Box>
+        </div>
+      </div>
+    </div>
   );
 };
 

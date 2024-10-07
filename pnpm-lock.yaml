@@ -5,6 +5,7 @@ specifiers:
   '@chakra-ui/react': ^2.8.2
   '@emotion/react': ^11.11.4
   '@emotion/styled': ^11.11.5
+  '@radix-ui/react-slot': ^1.1.0
   '@ts-rest/core': ^3.45.2
   '@ts-rest/open-api': ^3.45.2
   '@types/node': ^20
@@ -42,6 +43,7 @@ dependencies:
   '@chakra-ui/react': 2.8.2_vqrkj33ndnhrzzerdq3tmt2xlu
   '@emotion/react': 11.13.0_3vdbhqr2ncalcx7opnshezpx3q
   '@emotion/styled': 11.13.0_xljnk7movhv7oisglpsse4qb4m
+  '@radix-ui/react-slot': 1.1.0_3vdbhqr2ncalcx7opnshezpx3q
   '@ts-rest/core': 3.48.1_zod@3.23.8
   '@ts-rest/open-api': 3.48.1_zod@3.23.8
   '@workos-inc/authkit-nextjs': 0.8.2_ltovtef2igdo24amj746kuxosm
@@ -2095,6 +2097,33 @@ packages:
 
   /@popperjs/core/2.11.8:
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
+    dev: false
+
+  /@radix-ui/react-compose-refs/1.1.0_3vdbhqr2ncalcx7opnshezpx3q:
+    resolution: {integrity: sha512-b4inOtiaOnYf9KWyO3jAeeCG6FeyfY6ldiEPanbUjWd+xIk5wZeHa8yVwmrJ2vderhu/BQvzCrJI0lHd+wIiqw==}
+    peerDependencies:
+      '@types/react': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@types/react': 18.3.3
+      react: 18.3.1
+    dev: false
+
+  /@radix-ui/react-slot/1.1.0_3vdbhqr2ncalcx7opnshezpx3q:
+    resolution: {integrity: sha512-FUCf5XMfmW4dtYl69pdS4DbxKy8nj4M7SafBgPllysxmdachynNflAdp/gCsnYWNDnge6tI9onzMp5ARYc1KNw==}
+    peerDependencies:
+      '@types/react': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@radix-ui/react-compose-refs': 1.1.0_3vdbhqr2ncalcx7opnshezpx3q
+      '@types/react': 18.3.3
+      react: 18.3.1
     dev: false
 
   /@rushstack/eslint-patch/1.10.4:
