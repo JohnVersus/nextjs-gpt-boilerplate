@@ -56,7 +56,6 @@ module.exports = {
           4: "hsl(var(--chart-4))",
           5: "hsl(var(--chart-5))",
         },
-        // Added custom colors from your Chakra UI theme
         text: "#F4F4F5",
         textGray: "#6E6E77",
         bgPrimary: "#FAFAFA",

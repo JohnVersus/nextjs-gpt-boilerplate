@@ -21,7 +21,7 @@ const Footer = () => {
               href="/swagger"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm font-medium hover:underline"
+              className="text-sm font-thin hover:underline"
             >
               API Docs
             </Link>
@@ -29,16 +29,13 @@ const Footer = () => {
           <li>
             <Link
               href="/#roadmap"
-              className="text-sm font-medium hover:underline"
+              className="text-sm font-thin hover:underline"
             >
               Roadmap
             </Link>
           </li>
           <li>
-            <Link
-              href="/pricing"
-              className="text-sm font-medium hover:underline"
-            >
+            <Link href="/pricing" className="text-sm font-thin hover:underline">
               Pricing
             </Link>
           </li>
@@ -46,7 +43,7 @@ const Footer = () => {
             <Link
               href="/TermsAndConditions"
               rel="prefetch"
-              className="text-sm font-medium hover:underline"
+              className="text-sm font-thin hover:underline"
             >
               Terms and Conditions
             </Link>
@@ -54,7 +51,7 @@ const Footer = () => {
           <li>
             <Link
               href="/CancellationAndRefundPolicy"
-              className="text-sm font-medium hover:underline"
+              className="text-sm font-thin hover:underline"
             >
               Cancellation and Refund Policy
             </Link>
@@ -62,7 +59,7 @@ const Footer = () => {
           <li>
             <Link
               href="/PrivacyPolicy"
-              className="text-sm font-medium hover:underline"
+              className="text-sm font-thin hover:underline"
             >
               Privacy Policy
             </Link>

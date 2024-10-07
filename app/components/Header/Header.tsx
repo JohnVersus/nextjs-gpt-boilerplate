@@ -31,7 +31,7 @@ const Header = () => {
   const onToggle = () => setIsOpen(!isOpen);
 
   return (
-    <header className="bg-primary text-white py-4 font-medium">
+    <header className="bg-primary text-white py-4 font-normal">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
         <div className="flex items-center">
           <Image

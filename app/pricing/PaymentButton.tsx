@@ -57,7 +57,7 @@ export function PaymentButton({
           key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
           amount: amount * 100, // Amount in paise
           currency: "INR",
-          name: "Next Js GPT Boilerplate",
+          name: "NextJs GPT Boilerplate",
           description: `Payment for ${plan}`,
           image: "/icon_black.svg",
           order_id: orderId,

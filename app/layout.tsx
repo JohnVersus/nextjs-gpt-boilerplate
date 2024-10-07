@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Providers } from "./providers";
-import { fonts } from "./fonts";
 import { Footer, Header } from "./components";
 import Script from "next/script";
+import { Inter } from "next/font/google";
+import { Toaster } from "@/components/ui/toaster";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+});
 
 export const metadata: Metadata = {
   title: "NextJs GPT Boilerplate - Jumpstart your GPT project",
@@ -42,14 +49,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={fonts.inter.variable}>
+    <html lang="en" className={inter.variable}>
       <body>
-        <Providers>
-          <Header />
-          <Script src="https://checkout.razorpay.com/v1/checkout.js" />
-          {children}
-          <Footer />
-        </Providers>
+        <Header />
+        <Script src="https://checkout.razorpay.com/v1/checkout.js" />
+        {children}
+        <Toaster />
+        <Footer />
       </body>
     </html>
   );

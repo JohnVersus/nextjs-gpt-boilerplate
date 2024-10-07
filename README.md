@@ -7,7 +7,7 @@ This boilerplate provides a solid foundation for building GPT-powered applicatio
 - **API Documentation Generation**: Automatically generates API docs based on the standard folder structure when endpoints are defined. You can find examples and structure inside the `api` folder.
 - **Authentication**: Includes a custom Work OS Auth Kit layouts.
 - **Payments Integration**: Configured with Razorpay for handling payments, with payment data lifecycle managed using **Drizzle ORM** in a SQL database.
-- **UI Components**: Pre-built UI components using **Chakra UI** for a seamless and responsive user interface.
+- **UI Components**: UI components are built using **shadcn** for a seamless and responsive user interface.
 - **Database ORM**: Uses **Drizzle ORM** for managing database interactions with defined schemas.
 
 ## Getting Started
@@ -86,7 +86,7 @@ The `api` folder defines your API endpoints. This boilerplate includes demo endp
 
 ## UI Components
 
-Pre-built UI components are implemented using Chakra UI. You can customize them under the `components` folder, which includes:
+Pre-built UI components are implemented using shadcn library. You can customize them under the `components` folder, which includes:
 
 - **Header**
 - **Footer**
